@@ -82,6 +82,7 @@ public class LoginActivity  extends AppCompatActivity {
                                     String address = userInfo.getString("address");
                                     String login = userInfo.getString("login");
                                     String phone = userInfo.getString("phone");
+                                    String balance = userInfo.getString("balance");
 
                                     // Use the parsed variables as needed
                                     runOnUiThread(new Runnable() {
@@ -101,6 +102,7 @@ public class LoginActivity  extends AppCompatActivity {
                                     values.put("address", address);
                                     values.put("login", login);
                                     values.put("phone", phone);
+                                    values.put("balance", balance);
 
                                     for (Map.Entry<String, String> entry : values.entrySet()) {
                                         if (!sharedPreferences.contains(entry.getKey())) {

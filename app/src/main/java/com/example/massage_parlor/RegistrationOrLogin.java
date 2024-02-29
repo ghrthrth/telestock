@@ -28,6 +28,7 @@ public class RegistrationOrLogin extends AppCompatActivity {
         dataMap.put("address", sharedPreferences.getString("address", ""));
         dataMap.put("login", sharedPreferences.getString("login", ""));
         dataMap.put("phone", sharedPreferences.getString("phone", ""));
+        dataMap.put("balance", sharedPreferences.getString("balance", ""));
 
         boolean isDataEmpty = dataMap.containsValue("");
         if (!isDataEmpty) {

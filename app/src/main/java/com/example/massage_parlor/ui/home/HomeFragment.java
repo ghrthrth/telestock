@@ -1,5 +1,6 @@
 package com.example.massage_parlor.ui.home;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,7 +26,9 @@ public class HomeFragment extends Fragment {
     private String address;
     private String login;
     private String phone;
+    private String balance;
 
+    @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -41,11 +44,15 @@ public class HomeFragment extends Fragment {
         address = sharedPreferences.getString("address", "");
         login = sharedPreferences.getString("login", "");
         phone = sharedPreferences.getString("phone", "");
+        balance = sharedPreferences.getString("balance", "");
 
-        Log.d("sferg", "grt" + name + surname + address + " " + id);
 
         final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView text_balance = binding.textBalance;
+
+        textView.setText("Привет - " + name + "," + surname + "!");
+        text_balance.setText("Ваш баланс - " + balance);
+
         return root;
     }
 
