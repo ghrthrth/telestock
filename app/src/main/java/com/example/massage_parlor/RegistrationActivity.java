@@ -51,15 +51,15 @@ public class RegistrationActivity extends AppCompatActivity {
                 String password = inputPassword.getText().toString();
                 boolean isChecked = agreement.isChecked();
 
-                if (name.isEmpty() || surname.isEmpty() || address.isEmpty() || login.isEmpty() || password.isEmpty() || !isChecked) {
+              //  if (name.isEmpty() || surname.isEmpty() || address.isEmpty() || login.isEmpty() || password.isEmpty() || !isChecked) {
                     // Display an error message if any field is empty or the checkbox is not checked
                     Toast.makeText(RegistrationActivity.this, "Please fill in all the fields and check the agreement", Toast.LENGTH_SHORT).show();
-                } else {
+              //  } else {
                     new HttpRequestTask().execute(name, surname, address, login, password, phoneNumber);
-                    Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+                    Intent intent = new Intent(RegistrationActivity.this, RegistrationOrLogin.class);
                     startActivity(intent);
                     finish();
-                }
+             //   }
             }
         });
 
@@ -94,7 +94,7 @@ public class RegistrationActivity extends AppCompatActivity {
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             RequestBody requestBody = RequestBody.create(JSON, json.toString());
             Request request = new Request.Builder()
-                    .url("https://claimbe.store/massage_parlor/registration.php")
+                    .url("https://claimbe.store/massage_parlor/api/registration.php")
                     .post(requestBody)
                     .build();
 

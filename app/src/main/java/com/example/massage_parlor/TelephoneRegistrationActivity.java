@@ -23,15 +23,15 @@ public class TelephoneRegistrationActivity extends AppCompatActivity {
                 String phoneNumber = editPhone.getText().toString();
 
                 // Validate the phone number using a regular expression
-                if (phoneNumber.matches("\\+375\\d{9}")) {
+                //if (phoneNumber.matches("\\+375\\d{9}")) {
                     Intent intent = new Intent(TelephoneRegistrationActivity.this, RegistrationActivity.class);
                     intent.putExtra("phone", phoneNumber);
                     startActivity(intent);
                     finish();
-                } else {
+                //} else {
                     // Display an error message if the phone number is not in the correct format
-                    Toast.makeText(TelephoneRegistrationActivity.this, "Invalid phone number format. Please enter in the format +375xxxxxxxxx", Toast.LENGTH_SHORT).show();
-                }
+                   // Toast.makeText(TelephoneRegistrationActivity.this, "Invalid phone number format. Please enter in the format +375xxxxxxxxx", Toast.LENGTH_SHORT).show();
+                //}
             }
         });
 
