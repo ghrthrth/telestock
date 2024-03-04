@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,12 +18,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class ImageAdapter extends BaseAdapter {
+public class ImageAdapter extends BaseAdapter implements Filterable {
+
     private Context mContext;
     private List<String> mPhotoUrls;
     private List<String> mTitles;
     private List<String> mDescriptions;
     private List<String> mPrices;
+    private List<String> mFilteredTitles; // Добавьте отфильтрованные заголовки
+    private LayoutInflater mInflater;
+    private ItemFilter mItemFilter = new ItemFilter();
 
     public ImageAdapter(Context context, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices) {
         mContext = context;
@@ -29,11 +35,13 @@ public class ImageAdapter extends BaseAdapter {
         mTitles = titles;
         mDescriptions = descriptions;
         mPrices = prices;
+        mFilteredTitles = new ArrayList<>(titles); // Инициализируйте отфильтрованные заголовки
+        mInflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-        return mPhotoUrls.size();
+        return mFilteredTitles.size();
     }
 
     @Override
@@ -49,8 +57,7 @@ public class ImageAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.grid_item_layout, parent, false);
+            convertView = mInflater.inflate(R.layout.grid_item_layout, parent, false);
         }
 
         // Находим представления внутри макета элемента сетки
@@ -60,10 +67,12 @@ public class ImageAdapter extends BaseAdapter {
         TextView priceTextView = convertView.findViewById(R.id.price_text_view);
 
         // Устанавливаем данные для каждого представления
-        String photoUrl = mPhotoUrls.get(position);
-        String title = mTitles.get(position);
-        String description = mDescriptions.get(position);
-        String price = mPrices.get(position);
+        String title = mFilteredTitles.get(position);
+        int originalPosition = mTitles.indexOf(title); // Получаем позицию в оригинальном списке
+
+        String photoUrl = mPhotoUrls.get(originalPosition);
+        String description = mDescriptions.get(originalPosition);
+        String price = mPrices.get(originalPosition);
 
         // Загружаем изображение с помощью библиотеки Picasso или Glide
         Picasso.get().load(photoUrl).into(imageView);
@@ -74,5 +83,37 @@ public class ImageAdapter extends BaseAdapter {
         priceTextView.setText(price);
 
         return convertView;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return mItemFilter;
+    }
+
+    private class ItemFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            String filterString = constraint.toString().toLowerCase();
+
+            FilterResults results = new FilterResults();
+            List<String> filteredList = new ArrayList<>();
+
+            for (String title : mTitles) {
+                if (title.toLowerCase().contains(filterString)) {
+                    filteredList.add(title);
+                }
+            }
+
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mFilteredTitles = (List<String>) results.values;
+            notifyDataSetChanged();
+        }
     }
 }

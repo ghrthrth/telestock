@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -116,6 +117,22 @@ public class GalleryFragment extends Fragment {
                 GridView gridView = binding.gridView;
                 ImageAdapter adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, prices);
                 gridView.setAdapter(adapter);
+                SearchView searchView = binding.searchView;
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        adapter.getFilter().filter(newText);
+                        return true;
+                    }
+
+                });
+
                 gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
