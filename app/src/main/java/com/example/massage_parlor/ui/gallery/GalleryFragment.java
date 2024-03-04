@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -115,6 +116,20 @@ public class GalleryFragment extends Fragment {
                 GridView gridView = binding.gridView;
                 ImageAdapter adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, prices);
                 gridView.setAdapter(adapter);
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        // Получение выбранного товара
+                        String selectedTitle = titles.get(position);
+                        String selectedDescription = descriptions.get(position);
+                        String selectedPrice = prices.get(position);
+
+                        // Создание экземпляра ProductDetailFragment и его отображение
+                        ProductDetailFragment detailFragment = new ProductDetailFragment(selectedTitle, selectedDescription, selectedPrice);
+                        detailFragment.show(getFragmentManager(), "product_detail");
+                    }
+                });
+
             }
         });
     }
