@@ -1,5 +1,7 @@
 package com.example.massage_parlor.ui.home;
 
+import static com.example.massage_parlor.RegistrationOrLogin.getUserData;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.massage_parlor.MainActivity;
+import com.example.massage_parlor.RegistrationOrLogin;
 import com.example.massage_parlor.databinding.FragmentHomeBinding;
 
 import java.util.HashMap;
@@ -36,6 +39,7 @@ public class HomeFragment extends Fragment {
         final TextView textView = binding.textHome;
         final TextView text_balance = binding.textBalance;
 
+
         // Получение данных пользователя из метода getUserData
         Map<String, String> userData = getUserData(this.requireContext());
         String name = userData.get("name");
@@ -47,29 +51,6 @@ public class HomeFragment extends Fragment {
 
         return root;
     }
-
-    public static Map<String, String> getUserData(Context context){
-        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id", "");
-        String name = sharedPreferences.getString("name", "");
-        String surname = sharedPreferences.getString("surname", "");
-        String address = sharedPreferences.getString("address", "");
-        String login = sharedPreferences.getString("login", "");
-        String phone = sharedPreferences.getString("phone", "");
-        String balance = sharedPreferences.getString("balance", "");
-
-        Map<String, String> userData = new HashMap<>();
-        userData.put("id", id);
-        userData.put("name", name);
-        userData.put("surname", surname);
-        userData.put("address", address);
-        userData.put("login", login);
-        userData.put("phone", phone);
-        userData.put("balance", balance);
-
-        return userData;
-    }
-
 
     @Override
     public void onDestroyView() {

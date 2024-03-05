@@ -1,5 +1,7 @@
 package com.example.massage_parlor.ui.gallery;
 
+import static com.example.massage_parlor.RegistrationOrLogin.getUserData;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,7 +52,7 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
         TextView priceTextView = view.findViewById(R.id.price);
         Button send_data  = view.findViewById(R.id.button_appointment);
 
-        Map<String, String> userData = HomeFragment.getUserData(mContext);
+        Map<String, String> userData = getUserData(mContext);
 
 
         Map<String, String> params = new HashMap<>();

@@ -43,7 +43,6 @@ public class LoginActivity  extends AppCompatActivity {
 
                 OkHttpClient client = new OkHttpClient();
 
-                // Создайте объект JSON с данными пользователя
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("username", username);
@@ -52,14 +51,11 @@ public class LoginActivity  extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                // Создайте объект запроса с использованием OkHttp
                 RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
                 Request request = new Request.Builder()
                         .url("https://claimbe.store/massage_parlor/api/authentication.php") // Замените на URL вашего сервера
                         .post(requestBody)
                         .build();
-
-                // Выполните запрос асинхронно
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -81,6 +77,7 @@ public class LoginActivity  extends AppCompatActivity {
                                     String surname = userInfo.getString("surname");
                                     String address = userInfo.getString("address");
                                     String login = userInfo.getString("login");
+                                    String password = userInfo.getString("password");
                                     String phone = userInfo.getString("phone");
                                     String balance = userInfo.getString("balance");
 
@@ -101,6 +98,7 @@ public class LoginActivity  extends AppCompatActivity {
                                     values.put("surname", surname);
                                     values.put("address", address);
                                     values.put("login", login);
+                                    values.put("password", password);
                                     values.put("phone", phone);
                                     values.put("balance", balance);
 
