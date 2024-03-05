@@ -30,4 +30,10 @@
         android:textStyle="italic"
         android:textColor="#FF5722" />
 
+    <Button
+        android:id="@+id/button_appointment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Записаться" />
+
 </LinearLayout>

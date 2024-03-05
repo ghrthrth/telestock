@@ -77,31 +77,26 @@ public class GalleryFragment extends Fragment {
                     String json = response.body().string();
                     try {
                         JSONObject jsonObject = new JSONObject(json);
+                        JSONArray idArray = jsonObject.getJSONArray("id");
                         JSONArray photoUrlsArray = jsonObject.getJSONArray("photoUrls");
                         JSONArray titleArray = jsonObject.getJSONArray("title");
                         JSONArray descriptionArray = jsonObject.getJSONArray("description");
                         JSONArray priceArray = jsonObject.getJSONArray("price");
 
+                        List<String> ids = new ArrayList<>();
                         List<String> photoUrls = new ArrayList<>();
                         List<String> titles = new ArrayList<>();
                         List<String> descriptions = new ArrayList<>();
                         List<String> prices = new ArrayList<>();
 
+
+                        addItemsToList(idArray, ids);
                         addItemsToList(photoUrlsArray, photoUrls);
                         addItemsToList(titleArray, titles);
                         addItemsToList(descriptionArray, descriptions);
                         addItemsToList(priceArray, prices);
 
-
-                        // Now you can use the parsed data as needed
-                        for (int i = 0; i < photoUrls.size(); i++) {
-                            String photoUrl = photoUrls.get(i);
-                            String title = titles.get(i);
-                            String description = descriptions.get(i);
-                            String price = prices.get(i);
-                        }
-
-                        displayPhotosInGrid(photoUrls, titles, descriptions, prices);
+                        displayPhotosInGrid(ids, photoUrls, titles, descriptions, prices);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -110,7 +105,7 @@ public class GalleryFragment extends Fragment {
         });
     }
 
-    private void displayPhotosInGrid(List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices) {
+    private void displayPhotosInGrid(List<String> ids, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -137,12 +132,13 @@ public class GalleryFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         // Получение выбранного товара
+                        String selectedId = ids.get(position);
                         String selectedTitle = titles.get(position);
                         String selectedDescription = descriptions.get(position);
                         String selectedPrice = prices.get(position);
 
                         // Создание экземпляра ProductDetailFragment и его отображение
-                        ProductDetailFragment detailFragment = new ProductDetailFragment(selectedTitle, selectedDescription, selectedPrice);
+                        ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedId, selectedTitle, selectedDescription, selectedPrice);
                         detailFragment.show(getFragmentManager(), "product_detail");
                     }
                 });
