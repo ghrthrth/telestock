@@ -58,7 +58,7 @@ public class SlideshowFragment extends Fragment {
     }
 
     private void getPhotoUrlsFromServer() {
-        String url = "https://claimbe.store/massage_parlor/api/return_news.php"; // Замените на ваш URL-адрес сервера
+        String url = "https://claimbes.store/massage_parlor/api/return_news.php"; // Замените на ваш URL-адрес сервера
 
         OkHttpClient client = new OkHttpClient();
 

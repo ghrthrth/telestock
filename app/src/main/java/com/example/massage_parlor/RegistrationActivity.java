@@ -94,7 +94,7 @@ public class RegistrationActivity extends AppCompatActivity {
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             RequestBody requestBody = RequestBody.create(JSON, json.toString());
             Request request = new Request.Builder()
-                    .url("https://claimbe.store/massage_parlor/api/registration.php")
+                    .url("https://claimbes.store/massage_parlor/api/registration.php")
                     .post(requestBody)
                     .build();
 
