@@ -6,7 +6,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,12 +31,18 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class RegistrationOrLogin extends AppCompatActivity {
+
+    private Button reg_btn;
+    private Button auth_btn;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registration_or_login);
 
-        Button reg_btn = findViewById(R.id.registration);
-        Button auth_btn = findViewById(R.id.auth);
+        reg_btn = findViewById(R.id.registration);
+        auth_btn = findViewById(R.id.auth);
+
+        reg_btn.setVisibility(View.GONE);
+        auth_btn.setVisibility(View.GONE);
 
         Map<String, String> userData = getUserData(this);
         String balance = userData.get("balance");
@@ -91,6 +101,8 @@ public class RegistrationOrLogin extends AppCompatActivity {
         Map<String, String> userData = getUserData(this);
         String id = userData.get("id");
 
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+
         OkHttpClient client = new OkHttpClient();
 
         // Создайте объект JSON с данными пользователя
@@ -123,29 +135,65 @@ public class RegistrationOrLogin extends AppCompatActivity {
                             JSONObject userInfo = responseJson.getJSONObject("user_info");
 
                             String newBalance = userInfo.getString("balance");
-                            Log.d("Gergre", "fgergf" + newBalance);
+                            String id = userInfo.getString("id");
+                            String name = userInfo.getString("name");
+                            String surname = userInfo.getString("surname");
+                            String address = userInfo.getString("address");
+                            String login = userInfo.getString("login");
+                            String phone = userInfo.getString("phone");
+                            Log.d("Gergrfdsde", "fgergf" + newBalance + id + name + surname + address + login + phone);
+
+
                             SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                             Map<String, String> dataMap = new HashMap<>();
-                            dataMap.put("id", sharedPreferences.getString("id", ""));
-                            dataMap.put("name", sharedPreferences.getString("name", ""));
-                            dataMap.put("surname", sharedPreferences.getString("surname", ""));
-                            dataMap.put("address", sharedPreferences.getString("address", ""));
-                            dataMap.put("login", sharedPreferences.getString("login", ""));
-                            dataMap.put("phone", sharedPreferences.getString("phone", ""));
-
-                            boolean isDataEmpty = dataMap.containsValue("");
+                            boolean isDataEmpty = false;
+                            for (String value : dataMap.values()) {
+                                if (value.isEmpty()) {
+                                    isDataEmpty = true;
+                                    dataMap.put("id", userInfo.getString("id"));
+                                    dataMap.put("name", userInfo.getString("name"));
+                                    dataMap.put("surname", userInfo.getString("surname"));
+                                    dataMap.put("address", userInfo.getString("address"));
+                                    dataMap.put("login", userInfo.getString("login"));
+                                    dataMap.put("phone", userInfo.getString("phone"));
+                                    break;
+                                } else {
+                                    dataMap.put("id", sharedPreferences.getString("id", ""));
+                                    dataMap.put("name", sharedPreferences.getString("name", ""));
+                                    dataMap.put("surname", sharedPreferences.getString("surname", ""));
+                                    dataMap.put("address", sharedPreferences.getString("address", ""));
+                                    dataMap.put("login", sharedPreferences.getString("login", ""));
+                                    dataMap.put("phone", sharedPreferences.getString("phone", ""));
+                                }
+                            }
                             if (!isDataEmpty) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressBar.setVisibility(View.GONE); // скрываем ProgressBar
+                                    }
+                                });
                                 Intent intent = new Intent(RegistrationOrLogin.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
-                            } else {
-                                Toast.makeText(RegistrationOrLogin.this, "Войдите в лк заного!", Toast.LENGTH_SHORT).show();
                             }
                             if (!newBalance.equals(oldBalance)) {
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("balance", newBalance);
                                 editor.apply();
                             }
+                        }
+                        if (responseJson.has("error_auth")){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setVisibility(View.GONE); // скрываем ProgressBar
+                                    reg_btn.setVisibility(View.VISIBLE);
+                                    auth_btn.setVisibility(View.VISIBLE);
+                                    Toast.makeText(RegistrationOrLogin.this, "Войдите в лк заного!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -155,4 +203,5 @@ public class RegistrationOrLogin extends AppCompatActivity {
             }
         });
     }
+
 }
