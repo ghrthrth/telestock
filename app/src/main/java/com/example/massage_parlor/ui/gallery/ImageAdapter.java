@@ -25,16 +25,19 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
     private List<String> mTitles;
     private List<String> mDescriptions;
     private List<String> mPrices;
+
+    private List<String> mFios;
     private List<String> mFilteredTitles; // Добавьте отфильтрованные заголовки
     private LayoutInflater mInflater;
     private ItemFilter mItemFilter = new ItemFilter();
 
-    public ImageAdapter(Context context, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices) {
+    public ImageAdapter(Context context, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices, List<String> fios) {
         mContext = context;
         mPhotoUrls = photoUrls;
         mTitles = titles;
         mDescriptions = descriptions;
         mPrices = prices;
+        mFios = fios;
         mFilteredTitles = new ArrayList<>(titles); // Инициализируйте отфильтрованные заголовки
         mInflater = LayoutInflater.from(context);
     }
@@ -65,6 +68,7 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
         TextView titleTextView = convertView.findViewById(R.id.title_text_view);
         TextView descriptionTextView = convertView.findViewById(R.id.description_text_view);
         TextView priceTextView = convertView.findViewById(R.id.price_text_view);
+        TextView fioTextView = convertView.findViewById(R.id.fio_text_view);
 
         // Устанавливаем данные для каждого представления
         String title = mFilteredTitles.get(position);
@@ -73,6 +77,7 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
         String photoUrl = mPhotoUrls.get(originalPosition);
         String description = mDescriptions.get(originalPosition);
         String price = mPrices.get(originalPosition);
+        String fio = mFios.get(originalPosition);
 
         // Загружаем изображение с помощью библиотеки Picasso или Glide
         Picasso.get().load(photoUrl).into(imageView);

@@ -29,5 +29,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/description_text_view"
         android:text="Цена" />
+    <TextView
+        android:id="@+id/fio_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/price_text_view"
+        android:text="Фио специалиста" />
 
 </RelativeLayout>

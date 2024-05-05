@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -82,12 +83,15 @@ public class GalleryFragment extends Fragment {
                         JSONArray titleArray = jsonObject.getJSONArray("title");
                         JSONArray descriptionArray = jsonObject.getJSONArray("description");
                         JSONArray priceArray = jsonObject.getJSONArray("price");
+                        JSONArray fioArray = jsonObject.getJSONArray("fio");
+
 
                         List<String> ids = new ArrayList<>();
                         List<String> photoUrls = new ArrayList<>();
                         List<String> titles = new ArrayList<>();
                         List<String> descriptions = new ArrayList<>();
                         List<String> prices = new ArrayList<>();
+                        List<String> fio = new ArrayList<>();
 
 
                         addItemsToList(idArray, ids);
@@ -95,8 +99,9 @@ public class GalleryFragment extends Fragment {
                         addItemsToList(titleArray, titles);
                         addItemsToList(descriptionArray, descriptions);
                         addItemsToList(priceArray, prices);
+                        addItemsToList(fioArray, fio);
 
-                        displayPhotosInGrid(ids, photoUrls, titles, descriptions, prices);
+                        displayPhotosInGrid(ids, photoUrls, titles, descriptions, prices, fio);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -105,12 +110,12 @@ public class GalleryFragment extends Fragment {
         });
     }
 
-    private void displayPhotosInGrid(List<String> ids, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices) {
+    private void displayPhotosInGrid(List<String> ids, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices, List<String> fios) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 GridView gridView = binding.gridView;
-                ImageAdapter adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, prices);
+                ImageAdapter adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, prices, fios);
                 gridView.setAdapter(adapter);
                 SearchView searchView = binding.searchView;
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -136,9 +141,10 @@ public class GalleryFragment extends Fragment {
                         String selectedTitle = titles.get(position);
                         String selectedDescription = descriptions.get(position);
                         String selectedPrice = prices.get(position);
+                        String selectedFio = fios.get(position);
 
                         // Создание экземпляра ProductDetailFragment и его отображение
-                        ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedId, selectedTitle, selectedDescription, selectedPrice);
+                        ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedId, selectedTitle, selectedDescription, selectedPrice, selectedFio);
                         detailFragment.show(getFragmentManager(), "product_detail");
                     }
                 });
