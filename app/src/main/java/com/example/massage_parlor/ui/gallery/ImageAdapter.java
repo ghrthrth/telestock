@@ -83,9 +83,9 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
         Picasso.get().load(photoUrl).into(imageView);
 
         // Устанавливаем текст для текстовых представлений
-        titleTextView.setText(title);
-        descriptionTextView.setText(description);
-        priceTextView.setText(price);
+        titleTextView.setText("Название услуги: " + title);
+        priceTextView.setText("Цена: " + price);
+        fioTextView.setText("Специалист: " + fio);
 
         return convertView;
     }
