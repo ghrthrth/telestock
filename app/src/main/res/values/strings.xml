@@ -16,4 +16,5 @@
     <string name="menu_home">Личный кабинет</string>
     <string name="menu_gallery">Услуги</string>
     <string name="menu_slideshow">Новости</string>
+    <string name="menu_create_services">Создать услугу</string>
 </resources>
