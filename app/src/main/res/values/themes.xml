@@ -22,4 +22,5 @@
     <style name="Theme.Massage_parlor.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Massage_parlor.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

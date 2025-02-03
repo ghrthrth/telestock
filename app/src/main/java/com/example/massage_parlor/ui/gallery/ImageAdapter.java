@@ -67,8 +67,8 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
         ImageView imageView = convertView.findViewById(R.id.grid_image);
         TextView titleTextView = convertView.findViewById(R.id.title_text_view);
         TextView descriptionTextView = convertView.findViewById(R.id.description_text_view);
-        TextView priceTextView = convertView.findViewById(R.id.price_text_view);
-        TextView fioTextView = convertView.findViewById(R.id.fio_text_view);
+        //TextView priceTextView = convertView.findViewById(R.id.price_text_view);
+        //TextView fioTextView = convertView.findViewById(R.id.fio_text_view);
 
         // Устанавливаем данные для каждого представления
         String title = mFilteredTitles.get(position);
@@ -84,8 +84,8 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
 
         // Устанавливаем текст для текстовых представлений
         titleTextView.setText("Название услуги: " + title);
-        priceTextView.setText("Цена: " + price);
-        fioTextView.setText("Специалист: " + fio);
+        //priceTextView.setText("Цена: " + price);
+        //fioTextView.setText("Специалист: " + fio);
 
         return convertView;
     }
