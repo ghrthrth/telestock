@@ -18,4 +18,5 @@
     <string name="menu_slideshow">Новости</string>
     <string name="menu_create_services">Создать услугу</string>
     <string name="menu_create_news">Создать новость</string>
+    <string name="menu_applications">Заявки</string>
 </resources>

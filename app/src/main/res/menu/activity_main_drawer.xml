@@ -26,5 +26,10 @@
             android:id="@+id/nav_create_news"
             android:icon="@drawable/news"
             android:title="@string/menu_create_news" />
+
+        <item
+            android:id="@+id/nav_application"
+            android:icon="@drawable/news"
+            android:title="@string/menu_applications" />
     </group>
 </menu>
