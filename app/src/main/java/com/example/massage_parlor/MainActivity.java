@@ -72,10 +72,23 @@ public class MainActivity extends AppCompatActivity {
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
+        Menu menu = navigationView.getMenu();
+
+        // Получаем логин из SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String userLogin = sharedPreferences.getString("login", ""); // По умолчанию пустая строка
+
+        // Если логин не "admin", скрываем пункты меню
+        if (!userLogin.equals("admin")) {
+            menu.findItem(R.id.nav_create_services).setVisible(false);
+            menu.findItem(R.id.nav_create_news).setVisible(false);
+            menu.findItem(R.id.nav_application).setVisible(false);
+        }
+
 
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_create_services)
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_create_services, R.id.nav_create_news, R.id.nav_application)
                 .setOpenableLayout(drawer)
                 .build();
 
