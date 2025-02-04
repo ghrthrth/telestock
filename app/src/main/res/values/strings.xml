@@ -19,4 +19,5 @@
     <string name="menu_create_services">Создать услугу</string>
     <string name="menu_create_news">Создать новость</string>
     <string name="menu_applications">Заявки</string>
+    <string name="menu_cart">Корзина</string>
 </resources>
