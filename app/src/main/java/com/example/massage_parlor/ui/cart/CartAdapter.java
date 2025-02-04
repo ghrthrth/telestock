@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;  // Библиотека для загрузки картинок
 import com.example.massage_parlor.R;
 import java.util.List;
 
@@ -38,6 +40,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         holder.txtProductPrice.setText(product.getPrice() + " ₽");
         holder.txtProductQuantity.setText("Кол-во: " + product.getQuantity());
 
+        // Загрузка изображения через Glide
+        Glide.with(context)
+                .load(product.getImageUrl())  // Берём URL из объекта Product
+                .placeholder(R.drawable.ic_placeholder) // Заглушка
+                .error(R.drawable.ic_placeholder) // Если ошибка
+                .into(holder.imgProduct);
+
         holder.btnRemove.setOnClickListener(v -> {
             cartManager.removeFromCart(product.getId());
             cartItems.clear();
@@ -54,6 +63,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtProductName, txtProductPrice, txtProductQuantity;
+        ImageView imgProduct;  // Добавляем ImageView
         Button btnRemove;
 
         public ViewHolder(@NonNull View itemView) {
@@ -61,6 +71,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             txtProductName = itemView.findViewById(R.id.txtProductName);
             txtProductPrice = itemView.findViewById(R.id.txtProductPrice);
             txtProductQuantity = itemView.findViewById(R.id.txtProductQuantity);
+            imgProduct = itemView.findViewById(R.id.imgProduct); // Привязываем ImageView
             btnRemove = itemView.findViewById(R.id.btnRemove);
         }
     }

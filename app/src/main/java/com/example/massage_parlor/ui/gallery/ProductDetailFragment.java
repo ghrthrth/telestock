@@ -19,17 +19,18 @@ import com.example.massage_parlor.ui.cart.CartManager;
 
 public class ProductDetailFragment extends BottomSheetDialogFragment {
     private int id;
-    private String title, description, fio;
+    private String title, description, fio, imageUrl;
     private double price;
     private Context mContext;
     public CartManager cartManager;
 
-    public ProductDetailFragment(Context context, int id, String title, String description, double price, String fio) {
+    public ProductDetailFragment(Context context, int id, String title, String description, double price, String fio, String imageUrl) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.price = price;
         this.fio = fio;
+        this.imageUrl = imageUrl;  // Добавляем изображение
         this.mContext = context;
     }
 
@@ -52,7 +53,7 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
         cartManager = CartManager.getInstance(mContext);
 
         addToCartButton.setOnClickListener(v -> {
-            Product product = new Product(id, title, price, 1);
+            Product product = new Product(id, title, price, 1, imageUrl);  // Передаём изображение
             cartManager.addToCart(product);
             Toast.makeText(mContext, "Товар добавлен в корзину!", Toast.LENGTH_SHORT).show();
         });

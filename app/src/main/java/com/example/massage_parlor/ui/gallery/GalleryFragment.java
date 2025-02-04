@@ -142,15 +142,17 @@ public class GalleryFragment extends Fragment {
                         String selectedDescription = descriptions.get(position);
                         String selectedPrice = prices.get(position);
                         String selectedFio = fios.get(position);
+                        String selectedImageUrl = photoUrls.get(position);  // Получаем URL изображения
 
                         int selectedIds = Integer.parseInt(selectedId);
                         double selectedPrices = Double.parseDouble(selectedPrice);
 
                         // Создание экземпляра ProductDetailFragment и его отображение
-                        ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedPrices, selectedFio);
+                        ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedPrices, selectedFio, selectedImageUrl);
                         detailFragment.show(getFragmentManager(), "product_detail");
                     }
                 });
+
 
             }
         });
