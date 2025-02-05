@@ -1,5 +1,7 @@
 package com.example.massage_parlor.ui.cart;
 
+import static com.example.massage_parlor.RegistrationOrLogin.getUserData;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;  // Библиотека для загрузки картинок
 import com.example.massage_parlor.R;
+import com.example.massage_parlor.ui.applications.HttpRequestTask;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     private Context context;
@@ -37,15 +45,45 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = cartItems.get(position);
         holder.txtProductName.setText(product.getName());
-        holder.txtProductPrice.setText(product.getPrice() + " ₽");
-        holder.txtProductQuantity.setText("Кол-во: " + product.getQuantity());
+        holder.txtProductPrice.setText(product.getPrice() + " р");
+        holder.txtProductQuantity.setText("" + product.getQuantity());
 
         // Загрузка изображения через Glide
         Glide.with(context)
-                .load(product.getImageUrl())  // Берём URL из объекта Product
-                .placeholder(R.drawable.ic_placeholder) // Заглушка
-                .error(R.drawable.ic_placeholder) // Если ошибка
+                .load(product.getImageUrl())
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_placeholder)
                 .into(holder.imgProduct);
+
+        // Обработчик для кнопки "Купить"
+        holder.btnBuy.setOnClickListener(v -> {
+            // Создаём Map<String, String> вместо Map<String, Object>
+            Map<String, String> params = new HashMap<>();
+
+            Map<String, String> userData = getUserData(context);
+
+            params.put("user_id", String.valueOf(Integer.parseInt(userData.get("id"))));
+            params.put("service_id", String.valueOf(product.getId()));
+            params.put("product_name", product.getName());  // Приводим ID к строке
+            params.put("product_price", String.valueOf(product.getPrice()));  // Приводим ID к строке
+            params.put("product_quantity", String.valueOf(product.getQuantity()));  // Приводим ID к строке
+
+            // Получаем текущее системное время
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+
+            String formattedDate = dateFormat.format(calendar.getTime());
+            String formattedTime = timeFormat.format(calendar.getTime());
+
+            // Добавляем дату и время в параметры
+            params.put("dates", formattedDate);
+            params.put("times", formattedTime);
+
+            // Отправка данных на сервер
+            new HttpRequestTask(context, "https://claimbes.store/massage_parlor/api/add_application/add.php", params).execute();
+        });
+
 
         holder.btnRemove.setOnClickListener(v -> {
             cartManager.removeFromCart(product.getId());
@@ -64,15 +102,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtProductName, txtProductPrice, txtProductQuantity;
         ImageView imgProduct;  // Добавляем ImageView
-        Button btnRemove;
+        Button btnRemove, btnBuy; // Добавляем кнопку "Купить"
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtProductName = itemView.findViewById(R.id.txtProductName);
             txtProductPrice = itemView.findViewById(R.id.txtProductPrice);
             txtProductQuantity = itemView.findViewById(R.id.txtProductQuantity);
-            imgProduct = itemView.findViewById(R.id.imgProduct); // Привязываем ImageView
+            imgProduct = itemView.findViewById(R.id.imgProduct);
             btnRemove = itemView.findViewById(R.id.btnRemove);
+            btnBuy = itemView.findViewById(R.id.btnBuy);  // Привязываем кнопку "Купить"
         }
     }
 }
