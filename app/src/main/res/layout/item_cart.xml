@@ -3,41 +3,87 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:elevation="4dp">
 
+    <!-- Изображение продукта -->
     <ImageView
         android:id="@+id/imgProduct"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_placeholder"
-        android:layout_marginEnd="8dp"/>
-    <TextView
-        android:id="@+id/txtProductName"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="Изображение продукта"/>
+
+    <!-- Контейнер с информацией о продукте -->
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:text="Название"
-        android:textSize="16sp" />
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txtProductPrice"
+        <!-- Название продукта -->
+        <TextView
+            android:id="@+id/txtProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Название товара"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:layout_marginBottom="4dp"/>
+
+        <!-- Цена продукта -->
+        <TextView
+            android:id="@+id/txtProductPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="55,27 р."
+            android:textSize="16sp"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
+
+    <!-- Управление количеством -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Цена"
-        android:textSize="16sp"/>
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/txtProductQuantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Кол-во"
-        android:textSize="16sp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-    <Button
-        android:id="@+id/btnRemove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Удалить"/>
+            <!-- Количество -->
+            <TextView
+                android:id="@+id/txtProductQuantity"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:gravity="center"
+                android:text="1"
+                android:textSize="14sp"/>
 
+            <!-- Кнопка уменьшения -->
+            <Button
+                android:id="@+id/btnRemove"
+                android:layout_width="36dp"
+                android:layout_height="46dp"
+                android:text="-"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+        <!-- Кнопка покупки -->
+        <Button
+            android:id="@+id/btnBuy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Купить"
+            android:textColor="@color/white"
+            android:layout_marginTop="4dp"/>
+    </LinearLayout>
 </LinearLayout>
