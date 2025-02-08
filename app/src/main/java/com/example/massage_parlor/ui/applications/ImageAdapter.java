@@ -101,13 +101,13 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
         //user_idTextView.setText("Id юзера " + user_id);
         //service_idTextView.setText("Id услуги " + service_id);
         titleTextView.setText("Продукт: " + title);
-        nameTextView.setText("Имя заказчика " + name);
-        surnameTextView.setText("Фамилия заказчика " + surname);
-        phoneTextView.setText("Телефон заказчика" + phone);
-        datesTextView.setText("Дата заказа " + date);
-        timesTextView.setText("Время заказа " + time);
+        nameTextView.setText("Имя заказчика: " + name);
+        surnameTextView.setText("Фамилия заказчика: " + surname);
+        phoneTextView.setText("Телефон заказчика: " + phone);
+        datesTextView.setText("Дата заказа: " + date);
+        timesTextView.setText("Время заказа: " + time);
 /*        fiosTextView.setText("Фамилия специалиста: " + fio);*/
-        product_quantitysTextView.setText("Количество " + product_quantity);
+        product_quantitysTextView.setText("Количество: " + product_quantity);
 
 
         return convertView;
