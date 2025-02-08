@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Массажный салон</string>
+    <string name="app_name">TeleStock</string>
     <string name="start">Выберите действие</string>
     <string name="main_label">Привет!</string>
     <string name="reg_or_login_label">Добро пожаловать!</string>

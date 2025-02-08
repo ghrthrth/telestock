@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -63,12 +64,26 @@ public class CreateServicesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Проверка разрешений
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    openGallery();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    // Android 13 и выше
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_MEDIA_IMAGES)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                                REQUEST_CODE_PERMISSION);
+                    } else {
+                        openGallery();
+                    }
                 } else {
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+                    // Android 12 и ниже
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                REQUEST_CODE_PERMISSION);
+                    } else {
+                        openGallery();
+                    }
                 }
             }
         });

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -55,7 +56,7 @@ public class CreateNewsFragment extends Fragment {
         final Button send = binding.send;
         final Button selectPhoto = binding.selectPhoto;
 
-        selectPhoto.setOnClickListener(v -> openGallery());
+        selectPhoto.setOnClickListener(v -> requestStoragePermission());
 
         send.setOnClickListener(v -> {
             String titles = title.getText().toString();
@@ -76,18 +77,26 @@ public class CreateNewsFragment extends Fragment {
     }
 
     private void requestStoragePermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            new AlertDialog.Builder(getContext())
-                    .setMessage("Для выбора изображения необходимо разрешение на доступ к хранилищу.")
-                    .setPositiveButton("OK", (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            REQUEST_CODE_PERMISSION))
-                    .setNegativeButton("Отмена", null)
-                    .show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13 и выше
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_MEDIA_IMAGES)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                        REQUEST_CODE_PERMISSION);
+            } else {
+                launchGallery();
+            }
         } else {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    REQUEST_CODE_PERMISSION);
+            // Android 12 и ниже
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_CODE_PERMISSION);
+            } else {
+                launchGallery();
+            }
         }
     }
 
