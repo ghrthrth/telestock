@@ -35,8 +35,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/DATE_text_view"/>
-    <TextView
+<!--    <TextView
         android:id="@+id/FIO_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/TIME_text_view"/>-->
+    <TextView
+        android:id="@+id/PRODUCT_QUANTITY_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/TIME_text_view"/>

@@ -75,6 +75,7 @@
                 android:layout_height="46dp"
                 android:text="-"
                 android:textColor="@color/white"/>
+
         </LinearLayout>
 
         <!-- Кнопка покупки -->

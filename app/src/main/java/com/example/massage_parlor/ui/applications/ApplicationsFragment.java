@@ -93,7 +93,8 @@ public class ApplicationsFragment extends Fragment {
                         JSONArray phoneArray = jsonObject.getJSONArray("phone");
                         JSONArray datesArray = jsonObject.getJSONArray("dates");
                         JSONArray timesArray = jsonObject.getJSONArray("times");
-                        JSONArray fioArray = jsonObject.getJSONArray("fio");
+/*                        JSONArray fioArray = jsonObject.getJSONArray("fio");*/
+                        JSONArray product_quantityArray = jsonObject.getJSONArray("product_quantity");
 
                         Log.d("erf", "ferf" + titleArray);
 
@@ -105,7 +106,8 @@ public class ApplicationsFragment extends Fragment {
                         List<String> phones = new ArrayList<>();
                         List<String> dates = new ArrayList<>();
                         List<String> times = new ArrayList<>();
-                        List<String> fios = new ArrayList<>();
+/*                        List<String> fios = new ArrayList<>();*/
+                        List<String> product_quantitys = new ArrayList<>();
 
 
                         addItemsToList(user_idArray, ids);
@@ -116,9 +118,10 @@ public class ApplicationsFragment extends Fragment {
                         addItemsToList(phoneArray, phones);
                         addItemsToList(datesArray, dates);
                         addItemsToList(timesArray, times);
-                        addItemsToList(fioArray, fios);
+/*                        addItemsToList(fioArray, fios);*/
+                        addItemsToList(product_quantityArray, product_quantitys);
 
-                        displayPhotosInGrid(ids, service_ids, titles, names, surnames, phones, dates, times, fios);
+                        displayPhotosInGrid(ids, service_ids, titles, names, surnames, phones, dates, times, product_quantitys);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -127,13 +130,13 @@ public class ApplicationsFragment extends Fragment {
         });
     }
 
-    private void displayPhotosInGrid(List<String> ids, List<String> service_ids, List<String> titles, List<String> names, List<String> surnames, List<String> phones, List<String> dates, List<String> times, List<String> fios) {
+    private void displayPhotosInGrid(List<String> ids, List<String> service_ids, List<String> titles, List<String> names, List<String> surnames, List<String> phones, List<String> dates, List<String> times, List<String> product_quantitys) {
         getActivity().runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
                 GridView gridView = binding.gridView;
-                ImageAdapter adapter = new ImageAdapter(getContext(), ids , service_ids, titles, names, surnames, phones, dates, times, fios);
+                ImageAdapter adapter = new ImageAdapter(getContext(), ids , service_ids, titles, names, surnames, phones, dates, times, product_quantitys);
                 gridView.setAdapter(adapter);
                 SearchView searchView = binding.searchView;
 
@@ -164,10 +167,11 @@ public class ApplicationsFragment extends Fragment {
                         String selectedPhones = phones.get(position);
                         String selectedDates = dates.get(position);
                         String selectedTimes = times.get(position);
-                        String selectedFios = fios.get(position);
+/*                        String selectedFios = fios.get(position);*/
+                        String selectedProduct_quantitys = product_quantitys.get(position);
 
                         // Создание экземпляра ProductDetailFragment и его отображение
-                        ApplicationDetailFragment detailFragment = new ApplicationDetailFragment(getContext(), selectedUserId, selectedServiceId, selectedTitle, selectedNames, selectedSurnames, selectedPhones, selectedDates, selectedTimes, selectedFios);
+                        ApplicationDetailFragment detailFragment = new ApplicationDetailFragment(getContext(), selectedUserId, selectedServiceId, selectedTitle, selectedNames, selectedSurnames, selectedPhones, selectedDates, selectedTimes, selectedProduct_quantitys);
                         // Pass the adapter to the ProductDetailFragment
                         detailFragment.setAdapter(adapter);
                         detailFragment.setPosition(position); // Set the position

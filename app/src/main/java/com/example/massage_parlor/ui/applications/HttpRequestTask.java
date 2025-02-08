@@ -31,8 +31,7 @@ public class HttpRequestTask extends AsyncTask<String, Void, String> {
         urls = url;
         params = param;
     }
-
-
+    
 
     @Override
     protected String doInBackground(String... doInBackgroundParams) {

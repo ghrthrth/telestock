@@ -28,12 +28,13 @@ public class ApplicationDetailFragment extends BottomSheetDialogFragment {
     private String phone;
     private String date;
     private String time;
-    private String fio;
+/*    private String fio;*/
+    private String product_quantity;
     private Context mContext;
     private ImageAdapter adapter;
     private int position;
 
-    public ApplicationDetailFragment(Context context, String userId, String serviceId, String titles, String names, String surnames, String phones, String dates, String times, String fios) {
+    public ApplicationDetailFragment(Context context, String userId, String serviceId, String titles, String names, String surnames, String phones, String dates, String times, String product_quantitys) {
         user_id = userId;
         service_id = serviceId;
         this.title = titles;
@@ -42,7 +43,8 @@ public class ApplicationDetailFragment extends BottomSheetDialogFragment {
         this.phone = phones;
         this.date = dates;
         this.time = times;
-        this.fio = fios;
+/*        this.fio = fios;*/
+        this.product_quantity = product_quantitys;
         this.mContext = context;
     }
 
@@ -68,19 +70,22 @@ public class ApplicationDetailFragment extends BottomSheetDialogFragment {
         TextView phoneTextView = view.findViewById(R.id.phone);
         TextView dateTextView = view.findViewById(R.id.date);
         TextView timeTextView = view.findViewById(R.id.time);
-        TextView fioTextView = view.findViewById(R.id.fio);
+/*        TextView fioTextView = view.findViewById(R.id.fio);*/
+        TextView product_quantityTextView = view.findViewById(R.id.product_quantity);
         Button send_data  = view.findViewById(R.id.button_appointment);
 
 
         //user_idTextView.setText(user_id);
         //service_idTextView.setText(service_id);
-        titleTextView.setText("Услуга: " + title);
-        nameTextView.setText("Имя записавшегося: " + name);
-        surnameTextView.setText("Фамилия записавшегося: " + surname);
+        titleTextView.setText("Продукт: " + title);
+        nameTextView.setText("Имя заказчика: " + name);
+        surnameTextView.setText("Фамилия заказчика: " + surname);
         phoneTextView.setText("Телефон: " + phone);
-        dateTextView.setText("Дата на которую записались: " + date);
-        timeTextView.setText("Время на которое записались: " + time);
-        fioTextView.setText("К какому специалисту: " + fio);
+        dateTextView.setText("Дата заказа: " + date);
+        timeTextView.setText("Время заказа: " + time);
+/*        fioTextView.setText("К какому специалисту: " + fio);*/
+        product_quantityTextView.setText("Количество: " + product_quantity);
+
 
         Map<String, String> params = new HashMap<>();
         params.put("user_id", user_id);

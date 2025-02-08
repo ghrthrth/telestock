@@ -55,7 +55,7 @@ public class CreateServicesFragment extends Fragment {
         final TextView title = binding.title;
         final TextView description = binding.description;
         final TextView price = binding.textPrice;
-        final TextView fio = binding.textFio;
+/*        final TextView fio = binding.textFio;*/
         final Button send = binding.send;
         final Button selectPhoto = binding.selectPhoto;
 
@@ -79,8 +79,8 @@ public class CreateServicesFragment extends Fragment {
                 String titles = title.getText().toString();
                 String descriptions = description.getText().toString();
                 String prices = price.getText().toString();
-                String fios = fio.getText().toString();
-                new HttpRequestTask().execute(titles, descriptions, prices, fios);
+/*                String fios = fio.getText().toString();*/
+                new HttpRequestTask().execute(titles, descriptions, prices);
             }
         });
         return root;
@@ -121,15 +121,15 @@ public class CreateServicesFragment extends Fragment {
             String title = params[0];
             String description = params[1];
             String price = params[2]; // Получаем категорию
-            String fio = params[3];
+/*            String fio = params[3];*/
 
             try {
                 MultipartBody.Builder builder = new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
                         .addFormDataPart("title", title)
                         .addFormDataPart("description", description)
-                        .addFormDataPart("price", price)
-                        .addFormDataPart("fio", fio);
+                        .addFormDataPart("price", price);
+/*                        .addFormDataPart("fio", fio);*/
 
                 if (selectedImageUri != null) {
                     String filePath = getRealPathFromUri(selectedImageUri);

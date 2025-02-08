@@ -82,6 +82,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
             // Отправка данных на сервер
             new HttpRequestTask(context, "https://claimbes.store/massage_parlor/api/add_application/add.php", params).execute();
+
+            cartManager.removeFromCart(product.getId());
+            cartItems.clear();
+            cartItems.addAll(cartManager.getCartItems());
+            notifyDataSetChanged();
+            updateTotalPriceCallback.run();
         });
 
 

@@ -26,18 +26,18 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
     private List<String> mDescriptions;
     private List<String> mPrices;
 
-    private List<String> mFios;
+/*    private List<String> mFios;*/
     private List<String> mFilteredTitles; // Добавьте отфильтрованные заголовки
     private LayoutInflater mInflater;
     private ItemFilter mItemFilter = new ItemFilter();
 
-    public ImageAdapter(Context context, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices, List<String> fios) {
+    public ImageAdapter(Context context, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices) {
         mContext = context;
         mPhotoUrls = photoUrls;
         mTitles = titles;
         mDescriptions = descriptions;
         mPrices = prices;
-        mFios = fios;
+/*        mFios = fios;*/
         mFilteredTitles = new ArrayList<>(titles); // Инициализируйте отфильтрованные заголовки
         mInflater = LayoutInflater.from(context);
     }
@@ -77,13 +77,13 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
         String photoUrl = mPhotoUrls.get(originalPosition);
         String description = mDescriptions.get(originalPosition);
         String price = mPrices.get(originalPosition);
-        String fio = mFios.get(originalPosition);
+/*        String fio = mFios.get(originalPosition);*/
 
         // Загружаем изображение с помощью библиотеки Picasso или Glide
         Picasso.get().load(photoUrl).into(imageView);
 
         // Устанавливаем текст для текстовых представлений
-        titleTextView.setText("Название услуги: " + title);
+        titleTextView.setText("Название товара: " + title);
         //priceTextView.setText("Цена: " + price);
         //fioTextView.setText("Специалист: " + fio);
 

@@ -59,7 +59,16 @@ public class CartManager {
     }
 
     public void removeFromCart(int productId) {
-        cartItems.removeIf(p -> p.getId() == productId);
-        saveCart();
+        for (Product p : cartItems) {
+            if (p.getId() == productId) {
+                if (p.getQuantity() > 1) {
+                    p.setQuantity(p.getQuantity() - 1); // Уменьшаем количество на 1
+                } else {
+                    cartItems.remove(p); // Удаляем товар, если количество стало 0
+                }
+                saveCart();
+                break;
+            }
+        }
     }
 }

@@ -24,13 +24,15 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
     private List<String> mPhones;
     private List<String> mDates;
     private List<String> mTimes;
-    private List<String> mFios;
+/*    private List<String> mFios;*/
+
+    private List<String> mProduct_quantitys;
 
     private List<String> mFilteredTitles; // Добавьте отфильтрованные заголовки
     private LayoutInflater mInflater;
     private ItemFilter mItemFilter = new ItemFilter();
 
-    public ImageAdapter(Context mContext, List<String> mIds, List<String> mServiceIds, List<String> mTitles, List<String> mnames, List<String> msurnames, List<String> mphones, List<String> mdates, List<String> mtimes, List<String> mfios) {
+    public ImageAdapter(Context mContext, List<String> mIds, List<String> mServiceIds, List<String> mTitles, List<String> mnames, List<String> msurnames, List<String> mphones, List<String> mdates, List<String> mtimes, List<String> mproduct_quantitys) {
         this.mIds = mIds;
         this.mServiceIds = mServiceIds;
         this.mTitles = mTitles;
@@ -39,7 +41,8 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
         this.mPhones = mphones;
         this.mDates = mdates;
         this.mTimes = mtimes;
-        this.mFios = mfios;
+/*        this.mFios = mfios;*/
+        this.mProduct_quantitys = mproduct_quantitys;
         mFilteredTitles = new ArrayList<>(mTitles); // Инициализируйте отфильтрованные заголовки
         mInflater = LayoutInflater.from(mContext);
     }
@@ -74,7 +77,8 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
         TextView phoneTextView = convertView.findViewById(R.id.PHONE_text_view);
         TextView datesTextView = convertView.findViewById(R.id.DATE_text_view);
         TextView timesTextView = convertView.findViewById(R.id.TIME_text_view);
-        TextView fiosTextView = convertView.findViewById(R.id.FIO_text_view);
+/*        TextView fiosTextView = convertView.findViewById(R.id.FIO_text_view);*/
+        TextView product_quantitysTextView = convertView.findViewById(R.id.PRODUCT_QUANTITY_text_view);
 
 
         // Устанавливаем данные для каждого представления
@@ -88,20 +92,22 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
         String phone = mPhones.get(originalPosition);
         String date = mDates.get(originalPosition);
         String time = mTimes.get(originalPosition);
-        String fio = mFios.get(originalPosition);
+/*        String fio = mFios.get(originalPosition);*/
+        String product_quantity = mProduct_quantitys.get(originalPosition);
 
 
 
         // Устанавливаем текст для текстовых представлений
         //user_idTextView.setText("Id юзера " + user_id);
         //service_idTextView.setText("Id услуги " + service_id);
-        titleTextView.setText("Услуга: " + title);
-        nameTextView.setText("Имя записавшегося " + name);
-        surnameTextView.setText("Фамилия " + surname);
-        phoneTextView.setText("Телефон" + phone);
-        datesTextView.setText("Дата записи " + date);
-        timesTextView.setText("Время записи " + time);
-        fiosTextView.setText("Фамилия специалиста: " + fio);
+        titleTextView.setText("Продукт: " + title);
+        nameTextView.setText("Имя заказчика " + name);
+        surnameTextView.setText("Фамилия заказчика " + surname);
+        phoneTextView.setText("Телефон заказчика" + phone);
+        datesTextView.setText("Дата заказа " + date);
+        timesTextView.setText("Время заказа " + time);
+/*        fiosTextView.setText("Фамилия специалиста: " + fio);*/
+        product_quantitysTextView.setText("Количество " + product_quantity);
 
 
         return convertView;
@@ -120,7 +126,8 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
         mPhones.remove(position);
         mDates.remove(position);
         mTimes.remove(position);
-        mFios.remove(position);
+/*        mFios.remove(position);*/
+        mProduct_quantitys.remove(position);
         mFilteredTitles.remove(position); // Remove from the filtered list as well
         notifyDataSetChanged(); // Notify the adapter that the data set has changed
     }

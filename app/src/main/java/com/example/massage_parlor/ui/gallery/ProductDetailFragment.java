@@ -21,17 +21,17 @@ import com.squareup.picasso.Picasso;
 
 public class ProductDetailFragment extends BottomSheetDialogFragment {
     private int id;
-    private String title, description, fio, imageUrl;
+    private String title, description, imageUrl;
     private double price;
     private Context mContext;
     public CartManager cartManager;
 
-    public ProductDetailFragment(Context context, int id, String title, String description, double price, String fio, String imageUrl) {
+    public ProductDetailFragment(Context context, int id, String title, String description, double price, String imageUrl) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.price = price;
-        this.fio = fio;
+/*        this.fio = fio;*/
         this.imageUrl = imageUrl;  // Добавляем изображение
         this.mContext = context;
     }
@@ -45,7 +45,7 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
         TextView titleTextView = view.findViewById(R.id.title);
         TextView descriptionTextView = view.findViewById(R.id.description);
         TextView priceTextView = view.findViewById(R.id.price);
-        TextView fioTextView = view.findViewById(R.id.fio);
+/*        TextView fioTextView = view.findViewById(R.id.fio);*/
         Button addToCartButton = view.findViewById(R.id.button_appointment);
 
         Picasso.get().load(imageUrl).into(imageView);

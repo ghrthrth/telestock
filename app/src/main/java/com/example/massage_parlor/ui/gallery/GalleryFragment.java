@@ -83,7 +83,7 @@ public class GalleryFragment extends Fragment {
                         JSONArray titleArray = jsonObject.getJSONArray("title");
                         JSONArray descriptionArray = jsonObject.getJSONArray("description");
                         JSONArray priceArray = jsonObject.getJSONArray("price");
-                        JSONArray fioArray = jsonObject.getJSONArray("fio");
+                        //JSONArray fioArray = jsonObject.getJSONArray("fio");
 
 
                         List<String> ids = new ArrayList<>();
@@ -91,7 +91,7 @@ public class GalleryFragment extends Fragment {
                         List<String> titles = new ArrayList<>();
                         List<String> descriptions = new ArrayList<>();
                         List<String> prices = new ArrayList<>();
-                        List<String> fio = new ArrayList<>();
+/*                        List<String> fio = new ArrayList<>();*/
 
 
                         addItemsToList(idArray, ids);
@@ -99,9 +99,9 @@ public class GalleryFragment extends Fragment {
                         addItemsToList(titleArray, titles);
                         addItemsToList(descriptionArray, descriptions);
                         addItemsToList(priceArray, prices);
-                        addItemsToList(fioArray, fio);
+/*                        addItemsToList(fioArray, fio);*/
 
-                        displayPhotosInGrid(ids, photoUrls, titles, descriptions, prices, fio);
+                        displayPhotosInGrid(ids, photoUrls, titles, descriptions, prices);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -110,12 +110,12 @@ public class GalleryFragment extends Fragment {
         });
     }
 
-    private void displayPhotosInGrid(List<String> ids, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices, List<String> fios) {
+    private void displayPhotosInGrid(List<String> ids, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 GridView gridView = binding.gridView;
-                ImageAdapter adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, prices, fios);
+                ImageAdapter adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, prices);
                 gridView.setAdapter(adapter);
                 SearchView searchView = binding.searchView;
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -141,14 +141,14 @@ public class GalleryFragment extends Fragment {
                         String selectedTitle = titles.get(position);
                         String selectedDescription = descriptions.get(position);
                         String selectedPrice = prices.get(position);
-                        String selectedFio = fios.get(position);
+/*                        String selectedFio = fios.get(position);*/
                         String selectedImageUrl = photoUrls.get(position);  // Получаем URL изображения
 
                         int selectedIds = Integer.parseInt(selectedId);
                         double selectedPrices = Double.parseDouble(selectedPrice);
 
                         // Создание экземпляра ProductDetailFragment и его отображение
-                        ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedPrices, selectedFio, selectedImageUrl);
+                        ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedPrices, selectedImageUrl);
                         detailFragment.show(getFragmentManager(), "product_detail");
                     }
                 });

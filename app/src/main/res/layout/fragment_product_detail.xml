@@ -53,14 +53,14 @@
                 android:layout_marginBottom="8dp"
                 android:text="Цена: 1000₽" />
 
-            <TextView
+<!--            <TextView
                 android:id="@+id/fio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textColor="#000000"
                 android:layout_marginBottom="8dp"
-                android:text="Продавец: Иван Иванов" />
+                android:text="Продавец: Иван Иванов" />-->
 
             <Button
                 android:id="@+id/button_appointment"
