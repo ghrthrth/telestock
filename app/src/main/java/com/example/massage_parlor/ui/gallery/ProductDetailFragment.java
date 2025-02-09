@@ -1,6 +1,9 @@
 package com.example.massage_parlor.ui.gallery;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -59,19 +62,25 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
 
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        String userLogin = sharedPreferences.getString("login", ""); // Получаем логин пользователя
+
         ImageView imageView = view.findViewById(R.id.product_image);
         TextView titleTextView = view.findViewById(R.id.title);
         TextView descriptionTextView = view.findViewById(R.id.description);
         TextView priceTextView = view.findViewById(R.id.price);
-        /*        TextView fioTextView = view.findViewById(R.id.fio);*/
         Button addToCartButton = view.findViewById(R.id.button_appointment);
         Button deleteButton = view.findViewById(R.id.button_delete);
+
+        // Скрываем кнопку удаления, если логин не "admin"
+        if (!userLogin.equals("admin")) {
+            deleteButton.setVisibility(View.GONE);
+        }
 
         Picasso.get().load(imageUrl).into(imageView);
         titleTextView.setText("Название товара: " + title);
         descriptionTextView.setText("Описание товара: " + description);
         priceTextView.setText("Цена товара: " + price);
-        /*        fioTextView.setText("Фио специалиста: " + fio);*/
 
         cartManager = CartManager.getInstance(mContext);
 
@@ -88,7 +97,6 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
 
         return view;
     }
-
 
     private static class HttpRequestTask extends AsyncTask<String, Void, String> {
         private Context context;

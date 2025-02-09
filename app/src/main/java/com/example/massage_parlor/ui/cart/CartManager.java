@@ -6,11 +6,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class CartManager {
     private static final String CART_PREFS = "cart_prefs";
-    private static final String CART_ITEMS = "cart_items";
+    private static final String CART_ITEMS_PREFIX = "cart_items_"; // Добавляем префикс
 
     private static CartManager instance;
     private List<Product> cartItems;
@@ -30,7 +31,8 @@ public class CartManager {
 
     private void loadCart() {
         Gson gson = new Gson();
-        String json = prefs.getString(CART_ITEMS, null);
+        String userId = getCurrentUserId(); // Получаем ID текущего пользователя
+        String json = prefs.getString(CART_ITEMS_PREFIX + userId, null);
         Type type = new TypeToken<ArrayList<Product>>() {}.getType();
         cartItems = (json == null || json.isEmpty()) ? new ArrayList<>() : gson.fromJson(json, type);
     }
@@ -38,10 +40,14 @@ public class CartManager {
     private void saveCart() {
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
-        editor.putString(CART_ITEMS, gson.toJson(cartItems));
+        String userId = getCurrentUserId();
+        editor.putString(CART_ITEMS_PREFIX + userId, gson.toJson(cartItems));
         editor.apply();
     }
-
+    private String getCurrentUserId() {
+        SharedPreferences sharedPreferences = prefs; // Используем те же SharedPreferences
+        return sharedPreferences.getString("user_id", "guest"); // По умолчанию "guest"
+    }
     public List<Product> getCartItems() {
         return new ArrayList<>(cartItems);  // Возвращаем копию списка, чтобы избежать изменения исходного
     }
@@ -59,16 +65,18 @@ public class CartManager {
     }
 
     public void removeFromCart(int productId) {
-        for (Product p : cartItems) {
-            if (p.getId() == productId) {
-                if (p.getQuantity() > 1) {
-                    p.setQuantity(p.getQuantity() - 1); // Уменьшаем количество на 1
-                } else {
-                    cartItems.remove(p); // Удаляем товар, если количество стало 0
-                }
-                saveCart();
+        for (Iterator<Product> iterator = cartItems.iterator(); iterator.hasNext();) {
+            Product item = iterator.next();
+            if (item.getId() == productId) {
+                iterator.remove(); // Полностью удаляем товар
                 break;
             }
         }
     }
+
+    public void clearCart() {
+        cartItems.clear(); // Очищаем список товаров
+        saveCart(); // Сохраняем пустую корзину в SharedPreferences
+    }
+
 }

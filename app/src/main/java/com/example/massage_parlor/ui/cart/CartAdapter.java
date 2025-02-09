@@ -1,8 +1,10 @@
 package com.example.massage_parlor.ui.cart;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.massage_parlor.RegistrationOrLogin.getUserData;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +45,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String userLogin = sharedPreferences.getString("login", ""); // По умолчанию пустая строка
+
+        // Скрываем кнопку удаления, если логин не "admin"
+        if (!userLogin.equals("admin")) {
+            holder.btnRemove.setVisibility(View.GONE);
+        } else {
+            holder.btnRemove.setVisibility(View.VISIBLE);
+        }
+
         Product product = cartItems.get(position);
         holder.txtProductName.setText(product.getName());
         holder.txtProductPrice.setText(product.getPrice() + " р");

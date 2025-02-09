@@ -1,6 +1,7 @@
 package com.example.massage_parlor.ui.slideshow;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -50,11 +51,19 @@ public class NewsDetailFragment extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_detail, container, false);
 
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        String userLogin = sharedPreferences.getString("login", ""); // Получаем логин пользователя
+
         ImageView imageView = view.findViewById(R.id.news_image);
         TextView titleTextView = view.findViewById(R.id.news_title);
         TextView descriptionTextView = view.findViewById(R.id.news_description);
 
         Button deleteButton = view.findViewById(R.id.button_delete_news);
+
+        // Скрываем кнопку удаления, если логин не "admin"
+        if (!userLogin.equals("admin")) {
+            deleteButton.setVisibility(View.GONE);
+        }
 
         Picasso.get().load(imageUrl).into(imageView);
         titleTextView.setText("Название " + title);

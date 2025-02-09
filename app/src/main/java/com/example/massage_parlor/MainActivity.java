@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 
+import com.example.massage_parlor.ui.cart.CartManager;
 import com.example.massage_parlor.ui.home.HomeFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -73,6 +74,17 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         Menu menu = navigationView.getMenu();
+
+        SharedPreferences cartsharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String previousUser = cartsharedPreferences.getString("last_user", "");
+        String currentUser = cartsharedPreferences.getString("login", ""); // Получаем текущего пользователя
+
+        if (!previousUser.equals(currentUser)) {
+            CartManager.getInstance(this).clearCart(); // Очищаем корзину, если пользователь сменился
+        }
+
+        cartsharedPreferences.edit().putString("last_user", currentUser).apply();
+
 
         // Получаем логин из SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
