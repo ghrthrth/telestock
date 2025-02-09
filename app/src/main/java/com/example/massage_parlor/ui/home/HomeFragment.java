@@ -38,6 +38,9 @@ public class HomeFragment extends Fragment {
 
         final TextView textView = binding.textHome;
         final TextView text_balance = binding.textBalance;
+        final TextView text_address = binding.textAddress;
+        final TextView text_phone = binding.textPhone;
+        final TextView text_id = binding.textId;
 
 
         // Получение данных пользователя из метода getUserData
@@ -45,9 +48,15 @@ public class HomeFragment extends Fragment {
         String name = userData.get("name");
         String surname = userData.get("surname");
         String balance = userData.get("balance");
+        String address = userData.get("address");
+        String id = userData.get("id");
+        String phone = userData.get("phone");
 
         textView.setText("Привет - " + name + "," + surname + "!");
         text_balance.setText("Ваш баланс - " + balance);
+        text_address.setText("Ваш адрес - " + address);
+        text_id.setText("Ваш Id - " + id );
+        text_phone.setText("Ваш телефон - " + phone);
 
         return root;
     }

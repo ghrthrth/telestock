@@ -41,6 +41,8 @@ public class ApplicationsFragment extends Fragment {
 
     private FragmentApplicationsBinding binding;
 
+    private OkHttpClient client = new OkHttpClient();
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         ApplicationsViewModel applicationsViewModel =
@@ -65,6 +67,9 @@ public class ApplicationsFragment extends Fragment {
     }
 
     private void getPhotoUrlsFromServer() {
+
+        if (!isAdded()) return; // Проверяем, не был ли фрагмент уничтожен
+
         String url = "https://claimbes.store/massage_parlor/api/add_application/return.php"; // Замените на ваш URL-адрес сервера
 
         OkHttpClient client = new OkHttpClient();
@@ -131,58 +136,57 @@ public class ApplicationsFragment extends Fragment {
     }
 
     private void displayPhotosInGrid(List<String> ids, List<String> service_ids, List<String> titles, List<String> names, List<String> surnames, List<String> phones, List<String> dates, List<String> times, List<String> product_quantitys) {
-        getActivity().runOnUiThread(new Runnable() {
+        if (getActivity() == null || binding == null) {
+            return; // Предотвращение краша, если фрагмент уничтожен
+        }
+        if (!isAdded()) return; // Проверяем, не был ли фрагмент уничтожен
 
-            @Override
-            public void run() {
-                GridView gridView = binding.gridView;
-                ImageAdapter adapter = new ImageAdapter(getContext(), ids , service_ids, titles, names, surnames, phones, dates, times, product_quantitys);
-                gridView.setAdapter(adapter);
-                SearchView searchView = binding.searchView;
+        getActivity().runOnUiThread(() -> {
+            if (binding == null) return; // Проверяем повторно
 
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            GridView gridView = binding.gridView;
+            ImageAdapter adapter = new ImageAdapter(getContext(), ids, service_ids, titles, names, surnames, phones, dates, times, product_quantitys);
+            gridView.setAdapter(adapter);
 
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
+            SearchView searchView = binding.searchView;
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        adapter.getFilter().filter(newText);
-                        return true;
-                    }
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+                    return true;
+                }
+            });
 
-                });
+            gridView.setOnItemClickListener((parent, view, position, id) -> {
+                if (binding == null) return; // Проверяем, не уничтожен ли фрагмент
 
-                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // Получение выбранного товара
-                        String selectedUserId = ids.get(position);
-                        String selectedServiceId = service_ids.get(position);
-                        String selectedTitle = titles.get(position);
-                        String selectedNames = names.get(position);
-                        String selectedSurnames = surnames.get(position);
-                        String selectedPhones = phones.get(position);
-                        String selectedDates = dates.get(position);
-                        String selectedTimes = times.get(position);
-/*                        String selectedFios = fios.get(position);*/
-                        String selectedProduct_quantitys = product_quantitys.get(position);
+                String selectedUserId = ids.get(position);
+                String selectedServiceId = service_ids.get(position);
+                String selectedTitle = titles.get(position);
+                String selectedNames = names.get(position);
+                String selectedSurnames = surnames.get(position);
+                String selectedPhones = phones.get(position);
+                String selectedDates = dates.get(position);
+                String selectedTimes = times.get(position);
+                String selectedProduct_quantitys = product_quantitys.get(position);
 
-                        // Создание экземпляра ProductDetailFragment и его отображение
-                        ApplicationDetailFragment detailFragment = new ApplicationDetailFragment(getContext(), selectedUserId, selectedServiceId, selectedTitle, selectedNames, selectedSurnames, selectedPhones, selectedDates, selectedTimes, selectedProduct_quantitys);
-                        // Pass the adapter to the ProductDetailFragment
-                        detailFragment.setAdapter(adapter);
-                        detailFragment.setPosition(position); // Set the position
+                ApplicationDetailFragment detailFragment = new ApplicationDetailFragment(
+                        getContext(), selectedUserId, selectedServiceId, selectedTitle,
+                        selectedNames, selectedSurnames, selectedPhones, selectedDates,
+                        selectedTimes, selectedProduct_quantitys
+                );
+                detailFragment.setAdapter(adapter);
+                detailFragment.setPosition(position);
 
-                        // Show the ProductDetailFragment
-                        detailFragment.show(getFragmentManager(), "application_detail");
-
-                    }
-                });
-
-            }
+                if (getFragmentManager() != null) {
+                    detailFragment.show(getFragmentManager(), "application_detail");
+                }
+            });
         });
     }
 
@@ -190,5 +194,10 @@ public class ApplicationsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+
+        // Отменяем все асинхронные запросы
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
     }
 }

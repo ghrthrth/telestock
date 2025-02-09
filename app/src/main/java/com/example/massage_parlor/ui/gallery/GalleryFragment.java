@@ -38,6 +38,8 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
     private List<String> descriptions = new ArrayList<>();
     private List<String> prices = new ArrayList<>();
 
+    private OkHttpClient client = new OkHttpClient();
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         GalleryViewModel galleryViewModel =
@@ -77,6 +79,8 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                if (!isAdded()) return; // Проверяем, что фрагмент не уничтожен
+
                 if (response.isSuccessful()) {
                     String json = response.body().string();
                     try {
@@ -93,7 +97,9 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
                         addItemsToList(descriptionArray, descriptions);
                         addItemsToList(priceArray, prices);
 
-                        displayPhotosInGrid();
+                        if (isAdded()) { // Еще раз проверяем перед вызовом UI
+                            displayPhotosInGrid();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -118,28 +124,29 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
     }
     private void displayPhotosInGrid() {
         getActivity().runOnUiThread(() -> {
+            if (binding == null) return; // Проверяем, что binding существует
+
             GridView gridView = binding.gridView;
             ImageAdapter adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, prices);
             gridView.setAdapter(adapter);
 
-                SearchView searchView = binding.searchView;
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            SearchView searchView = binding.searchView;
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+                    return true;
+                }
+            });
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        adapter.getFilter().filter(newText);
-                        return true;
-                    }
-
-                });
-
-                // Внутри метода displayPhotosInGrid
             gridView.setOnItemClickListener((parent, view, position, id) -> {
+                if (binding == null) return; // Дополнительная проверка перед работой с элементами UI
+
                 String selectedId = ids.get(position);
                 String selectedTitle = titles.get(position);
                 String selectedDescription = descriptions.get(position);
@@ -150,18 +157,20 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
                 double selectedPrices = Double.parseDouble(selectedPrice);
 
                 ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedPrices, selectedImageUrl);
-                detailFragment.setOnProductDeletedListener(GalleryFragment.this); // Передаем слушатель
+                detailFragment.setOnProductDeletedListener(GalleryFragment.this);
                 detailFragment.show(getParentFragmentManager(), "product_detail");
             });
         });
     }
 
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
 
+        // Отменяем все асинхронные запросы
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
+    }
 }

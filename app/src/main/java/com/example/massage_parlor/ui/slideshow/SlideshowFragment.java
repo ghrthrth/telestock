@@ -40,6 +40,8 @@ public class SlideshowFragment extends Fragment implements NewsDetailFragment.On
     private List<String> titles = new ArrayList<>();
     private List<String> descriptions = new ArrayList<>();
 
+    private OkHttpClient client = new OkHttpClient();
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +82,8 @@ public class SlideshowFragment extends Fragment implements NewsDetailFragment.On
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+
+                if (!isAdded()) return; // Проверяем, что фрагмент не уничтожен
                 if (response.isSuccessful()) {
                     String json = response.body().string();
                     try {
@@ -100,7 +104,10 @@ public class SlideshowFragment extends Fragment implements NewsDetailFragment.On
                         addItemsToList(titleArray, titles);
                         addItemsToList(descriptionArray, descriptions);
 
-                        displayPhotosInGrid();
+                        if (isAdded()) { // Еще раз проверяем перед вызовом UI
+                            displayPhotosInGrid();
+                        }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -124,6 +131,7 @@ public class SlideshowFragment extends Fragment implements NewsDetailFragment.On
     }
     private void displayPhotosInGrid() {
         getActivity().runOnUiThread(() -> {
+            if (binding == null) return; // Проверяем, что binding существует
             GridView gridView = binding.gridView1;
             ImageAdapters adapters = new ImageAdapters(getContext(), photoUrls, titles, descriptions);
             gridView.setAdapter(adapters);
@@ -162,5 +170,10 @@ public class SlideshowFragment extends Fragment implements NewsDetailFragment.On
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+
+        // Отменяем все асинхронные запросы
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
     }
 }

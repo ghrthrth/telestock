@@ -11,10 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.massage_parlor.databinding.FragmentCartBinding;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+
 public class CartFragment extends Fragment {
     private FragmentCartBinding binding;
     private CartAdapter cartAdapter;
     private CartManager cartManager;
+
+    private OkHttpClient client = new OkHttpClient();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         CartViewModel cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
@@ -52,5 +56,10 @@ public class CartFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+
+        // Отменяем все асинхронные запросы
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
     }
 }

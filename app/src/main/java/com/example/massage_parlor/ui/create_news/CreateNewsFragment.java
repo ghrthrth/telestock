@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.massage_parlor.R;
 import com.example.massage_parlor.databinding.FragmentCreateNewsBinding;
 
 import java.io.File;
@@ -40,6 +41,8 @@ public class CreateNewsFragment extends Fragment {
 
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
     private static final int REQUEST_CODE_PERMISSION = 2;
+
+    private OkHttpClient client = new OkHttpClient();
 
     private Uri selectedImageUri;
 
@@ -145,6 +148,11 @@ public class CreateNewsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+
+        // Отменяем все асинхронные запросы
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
     }
 
     private class HttpRequestTask extends AsyncTask<String, Void, String> {
@@ -190,7 +198,14 @@ public class CreateNewsFragment extends Fragment {
                 Toast.makeText(getContext(), "Ошибка: " + result, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Данные успешно записаны", Toast.LENGTH_SHORT).show();
+
+                // Очистка полей
+                binding.title.setText(""); // Очистка заголовка
+                binding.description.setText(""); // Очистка описания
+                binding.imageView2.setImageResource(R.drawable.ic_menu_camera);; // Очистка изображения
+                selectedImageUri = null; // Сброс URI изображения
             }
         }
+
     }
 }
