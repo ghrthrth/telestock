@@ -1,6 +1,7 @@
 package com.example.massage_parlor.ui.gallery;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +16,20 @@ import androidx.annotation.Nullable;
 
 import com.example.massage_parlor.R;
 import com.example.massage_parlor.ui.cart.Product;
+import com.example.massage_parlor.ui.create_news.CreateNewsFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.example.massage_parlor.ui.cart.CartManager;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.IOException;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ProductDetailFragment extends BottomSheetDialogFragment {
     private int id;
@@ -26,17 +38,23 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
     private Context mContext;
     public CartManager cartManager;
 
+    private OnProductDeletedListener onProductDeletedListener;
+
+
     public ProductDetailFragment(Context context, int id, String title, String description, double price, String imageUrl) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.price = price;
-/*        this.fio = fio;*/
+        /*        this.fio = fio;*/
         this.imageUrl = imageUrl;  // Добавляем изображение
         this.mContext = context;
     }
 
-    @Nullable
+    public void setOnProductDeletedListener(OnProductDeletedListener listener) {
+        this.onProductDeletedListener = listener;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_product_detail, container, false);
@@ -45,14 +63,15 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
         TextView titleTextView = view.findViewById(R.id.title);
         TextView descriptionTextView = view.findViewById(R.id.description);
         TextView priceTextView = view.findViewById(R.id.price);
-/*        TextView fioTextView = view.findViewById(R.id.fio);*/
+        /*        TextView fioTextView = view.findViewById(R.id.fio);*/
         Button addToCartButton = view.findViewById(R.id.button_appointment);
+        Button deleteButton = view.findViewById(R.id.button_delete);
 
         Picasso.get().load(imageUrl).into(imageView);
         titleTextView.setText("Название товара: " + title);
         descriptionTextView.setText("Описание товара: " + description);
         priceTextView.setText("Цена товара: " + price);
-/*        fioTextView.setText("Фио специалиста: " + fio);*/
+        /*        fioTextView.setText("Фио специалиста: " + fio);*/
 
         cartManager = CartManager.getInstance(mContext);
 
@@ -62,6 +81,76 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
             Toast.makeText(mContext, "Товар добавлен в корзину!", Toast.LENGTH_SHORT).show();
         });
 
+        deleteButton.setOnClickListener(v -> {
+            new HttpRequestTask(getContext(), onProductDeletedListener, id).execute(String.valueOf(id));
+            dismiss(); // Закрываем фрагмент после удаления
+        });
+
         return view;
     }
+
+
+    private static class HttpRequestTask extends AsyncTask<String, Void, String> {
+        private Context context;
+        private OnProductDeletedListener listener;
+        private int productId;
+
+        public HttpRequestTask(Context context, OnProductDeletedListener listener, int productId) {
+            this.context = context;
+            this.listener = listener;
+            this.productId = productId;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length == 0 || params[0] == null || params[0].isEmpty()) {
+                return "Ошибка: ID не указан";
+            }
+            String id = params[0];
+
+            try {
+                // Создаем JSON-строку для передачи
+                String json = "{\"id\": \"" + id + "\"}";
+
+                // Создаем тело запроса с типом application/json
+                RequestBody requestBody = RequestBody.create(json, MediaType.parse("application/json"));
+
+                // Создаем запрос
+                Request request = new Request.Builder()
+                        .url("https://claimbes.store/massage_parlor/admin_api/delete.php")
+                        .post(requestBody) // Указываем метод POST
+                        .build();
+
+                // Выполняем запрос
+                OkHttpClient client = new OkHttpClient();
+                Response response = client.newCall(request).execute();
+
+                // Проверяем успешность запроса
+                if (!response.isSuccessful()) {
+                    return "Ошибка: " + response.message();
+                }
+
+                return response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Ошибка: " + e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result != null && !result.startsWith("Ошибка:")) {
+                if (listener != null) {
+                    listener.onProductDeleted(productId);
+                }
+                Toast.makeText(context, "Успешно: " + result, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, result != null ? result : "Неизвестная ошибка", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    public interface OnProductDeletedListener {
+        void onProductDeleted(int productId);
+    }
 }
+

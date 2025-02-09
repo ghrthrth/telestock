@@ -1,14 +1,13 @@
 package com.example.massage_parlor.ui.gallery;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SearchView;
-import android.widget.TextView;
+
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,7 +21,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -31,9 +29,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class GalleryFragment extends Fragment {
+public class GalleryFragment extends Fragment implements ProductDetailFragment.OnProductDeletedListener{
 
     private FragmentGalleryBinding binding;
+    private List<String> ids = new ArrayList<>();
+    private List<String> photoUrls = new ArrayList<>();
+    private List<String> titles = new ArrayList<>();
+    private List<String> descriptions = new ArrayList<>();
+    private List<String> prices = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,9 +46,10 @@ public class GalleryFragment extends Fragment {
         binding = FragmentGalleryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        getPhotoUrlsFromServer();
+        getPhotoUrlsFromServer();  // Получаем данные с сервера
         return root;
     }
+
     private void addItemsToList(JSONArray jsonArray, List<String> list) {
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
@@ -56,7 +60,6 @@ public class GalleryFragment extends Fragment {
             }
         }
     }
-
     private void getPhotoUrlsFromServer() {
         String url = "https://claimbes.store/massage_parlor/admin_api/return.php"; // Замените на ваш URL-адрес сервера
 
@@ -83,25 +86,14 @@ public class GalleryFragment extends Fragment {
                         JSONArray titleArray = jsonObject.getJSONArray("title");
                         JSONArray descriptionArray = jsonObject.getJSONArray("description");
                         JSONArray priceArray = jsonObject.getJSONArray("price");
-                        //JSONArray fioArray = jsonObject.getJSONArray("fio");
-
-
-                        List<String> ids = new ArrayList<>();
-                        List<String> photoUrls = new ArrayList<>();
-                        List<String> titles = new ArrayList<>();
-                        List<String> descriptions = new ArrayList<>();
-                        List<String> prices = new ArrayList<>();
-/*                        List<String> fio = new ArrayList<>();*/
-
 
                         addItemsToList(idArray, ids);
                         addItemsToList(photoUrlsArray, photoUrls);
                         addItemsToList(titleArray, titles);
                         addItemsToList(descriptionArray, descriptions);
                         addItemsToList(priceArray, prices);
-/*                        addItemsToList(fioArray, fio);*/
 
-                        displayPhotosInGrid(ids, photoUrls, titles, descriptions, prices);
+                        displayPhotosInGrid();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -109,14 +101,27 @@ public class GalleryFragment extends Fragment {
             }
         });
     }
+    @Override
+    public void onProductDeleted(int productId) {
+        // Удаляем товар из списка по ID
+        int index = ids.indexOf(String.valueOf(productId));
+        if (index != -1) {
+            ids.remove(index);
+            photoUrls.remove(index);
+            titles.remove(index);
+            descriptions.remove(index);
+            prices.remove(index);
+        }
 
-    private void displayPhotosInGrid(List<String> ids, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                GridView gridView = binding.gridView;
-                ImageAdapter adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, prices);
-                gridView.setAdapter(adapter);
+        // Обновляем адаптер
+        displayPhotosInGrid();
+    }
+    private void displayPhotosInGrid() {
+        getActivity().runOnUiThread(() -> {
+            GridView gridView = binding.gridView;
+            ImageAdapter adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, prices);
+            gridView.setAdapter(adapter);
+
                 SearchView searchView = binding.searchView;
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -133,33 +138,30 @@ public class GalleryFragment extends Fragment {
 
                 });
 
-                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // Получение выбранного товара
-                        String selectedId = ids.get(position);
-                        String selectedTitle = titles.get(position);
-                        String selectedDescription = descriptions.get(position);
-                        String selectedPrice = prices.get(position);
-/*                        String selectedFio = fios.get(position);*/
-                        String selectedImageUrl = photoUrls.get(position);  // Получаем URL изображения
+                // Внутри метода displayPhotosInGrid
+            gridView.setOnItemClickListener((parent, view, position, id) -> {
+                String selectedId = ids.get(position);
+                String selectedTitle = titles.get(position);
+                String selectedDescription = descriptions.get(position);
+                String selectedPrice = prices.get(position);
+                String selectedImageUrl = photoUrls.get(position);
 
-                        int selectedIds = Integer.parseInt(selectedId);
-                        double selectedPrices = Double.parseDouble(selectedPrice);
+                int selectedIds = Integer.parseInt(selectedId);
+                double selectedPrices = Double.parseDouble(selectedPrice);
 
-                        // Создание экземпляра ProductDetailFragment и его отображение
-                        ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedPrices, selectedImageUrl);
-                        detailFragment.show(getFragmentManager(), "product_detail");
-                    }
-                });
-
-
-            }
+                ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedPrices, selectedImageUrl);
+                detailFragment.setOnProductDeletedListener(GalleryFragment.this); // Передаем слушатель
+                detailFragment.show(getParentFragmentManager(), "product_detail");
+            });
         });
     }
+
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
 }
