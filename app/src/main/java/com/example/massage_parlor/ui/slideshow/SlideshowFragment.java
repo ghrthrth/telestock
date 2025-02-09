@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.massage_parlor.databinding.FragmentSlideshowBinding;
+import com.example.massage_parlor.ui.gallery.GalleryFragment;
 import com.example.massage_parlor.ui.gallery.ImageAdapter;
 import com.example.massage_parlor.ui.gallery.ProductDetailFragment;
 
@@ -31,9 +32,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class SlideshowFragment extends Fragment {
+public class SlideshowFragment extends Fragment implements NewsDetailFragment.OnNewsDeletedListener {
 
     private FragmentSlideshowBinding binding;
+    private List<String> ids = new ArrayList<>(); // Добавьте это поле
+    private List<String> photoUrls = new ArrayList<>();
+    private List<String> titles = new ArrayList<>();
+    private List<String> descriptions = new ArrayList<>();
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -83,18 +89,18 @@ public class SlideshowFragment extends Fragment {
                         JSONArray titleArray = jsonObject.getJSONArray("title");
                         JSONArray descriptionArray = jsonObject.getJSONArray("description");
 
-                        List<String> ids = new ArrayList<>();
-                        List<String> photoUrls = new ArrayList<>();
-                        List<String> titles = new ArrayList<>();
-                        List<String> descriptions = new ArrayList<>();
-
+                        // Очистите списки перед добавлением новых данных
+                        ids.clear();
+                        photoUrls.clear();
+                        titles.clear();
+                        descriptions.clear();
 
                         addItemsToList(idArray, ids);
                         addItemsToList(photoUrlsArray, photoUrls);
                         addItemsToList(titleArray, titles);
                         addItemsToList(descriptionArray, descriptions);
 
-                        displayPhotosInGrid(ids, photoUrls, titles, descriptions);
+                        displayPhotosInGrid();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -102,32 +108,56 @@ public class SlideshowFragment extends Fragment {
             }
         });
     }
+    @Override
+    public void onNewsDeleted(int newsId) {
+        // Удаляем новость из списка по ID
+        int index = ids.indexOf(String.valueOf(newsId));
+        if (index != -1) {
+            ids.remove(index);
+            photoUrls.remove(index);
+            titles.remove(index);
+            descriptions.remove(index);
+        }
 
-    private void displayPhotosInGrid(List<String> ids, List<String> photoUrls, List<String> titles, List<String> descriptions) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                GridView gridView = binding.gridView1;
-                ImageAdapters adapters = new ImageAdapters(getContext(), photoUrls, titles, descriptions);
-                gridView.setAdapter(adapters);
-                SearchView searchView = binding.searchView;
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        // Обновляем адаптер
+        displayPhotosInGrid();
+    }
+    private void displayPhotosInGrid() {
+        getActivity().runOnUiThread(() -> {
+            GridView gridView = binding.gridView1;
+            ImageAdapters adapters = new ImageAdapters(getContext(), photoUrls, titles, descriptions);
+            gridView.setAdapter(adapters);
 
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
+            SearchView searchView = binding.searchView;
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        adapters.getFilter().filter(newText);
-                        return true;
-                    }
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-                });
-            }
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapters.getFilter().filter(newText);
+                    return true;
+                }
+            });
+
+            gridView.setOnItemClickListener((parent, view, position, id) -> {
+                String selectedId = ids.get(position);
+                String selectedTitle = titles.get(position);
+                String selectedDescription = descriptions.get(position);
+                String selectedImageUrl = photoUrls.get(position);
+
+                int selectedIds = Integer.parseInt(selectedId);
+
+                NewsDetailFragment newsDetailFragment = new NewsDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedImageUrl);
+                newsDetailFragment.setOnNewsDeletedListener(SlideshowFragment.this); // Передаем слушатель
+                newsDetailFragment.show(getParentFragmentManager(), "news_detail");
+            });
         });
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
