@@ -87,13 +87,13 @@ public class ImageAdapter extends BaseAdapter implements Filterable {
 
         //String user_id = mIds.get(originalPosition);
         //String service_id = mServiceIds.get(originalPosition);
-        String name = mNames.get(originalPosition);
-        String surname = mSurnames.get(originalPosition);
-        String phone = mPhones.get(originalPosition);
-        String date = mDates.get(originalPosition);
-        String time = mTimes.get(originalPosition);
+        String name = mNames.get(position);
+        String surname = mSurnames.get(position);
+        String phone = mPhones.get(position);
+        String date = mDates.get(position);
+        String time = mTimes.get(position);
 /*        String fio = mFios.get(originalPosition);*/
-        String product_quantity = mProduct_quantitys.get(originalPosition);
+        String product_quantity = mProduct_quantitys.get(position);
 
 
 

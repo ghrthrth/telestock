@@ -49,13 +49,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String userLogin = sharedPreferences.getString("login", ""); // По умолчанию пустая строка
 
-        // Скрываем кнопку удаления, если логин не "admin"
-        if (!userLogin.equals("admin")) {
-            holder.btnRemove.setVisibility(View.GONE);
-        } else {
-            holder.btnRemove.setVisibility(View.VISIBLE);
-        }
-
         Product product = cartItems.get(position);
         holder.txtProductName.setText(product.getName());
         holder.txtProductPrice.setText(product.getPrice() + " р");
