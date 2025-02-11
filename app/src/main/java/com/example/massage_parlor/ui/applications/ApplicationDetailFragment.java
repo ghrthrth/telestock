@@ -90,6 +90,10 @@ public class ApplicationDetailFragment extends BottomSheetDialogFragment {
         Map<String, String> params = new HashMap<>();
         params.put("user_id", user_id);
         params.put("service_id", service_id);
+        params.put("product_quantity", product_quantity);
+        params.put("date", date);
+        params.put("time", time);
+
 
         send_data.setOnClickListener(new View.OnClickListener() {
             @Override

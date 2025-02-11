@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.massage_parlor.ProgressRequestBody;
 import com.example.massage_parlor.R;
 import com.example.massage_parlor.databinding.FragmentCreateNewsBinding;
 
@@ -36,6 +38,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import com.airbnb.lottie.LottieAnimationView;
 
 public class CreateNewsFragment extends Fragment {
 
@@ -45,6 +48,8 @@ public class CreateNewsFragment extends Fragment {
     private OkHttpClient client = new OkHttpClient();
 
     private Uri selectedImageUri;
+
+    private int lastProgress = -1;  // Переменная для хранения последнего прогресса
 
     private FragmentCreateNewsBinding binding;
 
@@ -58,14 +63,17 @@ public class CreateNewsFragment extends Fragment {
         final TextView description = binding.description;
         final Button send = binding.send;
         final Button selectPhoto = binding.selectPhoto;
+        LottieAnimationView lottieProgress = binding.lottieProgress; // Инициализируем LottieAnimationView
 
         selectPhoto.setOnClickListener(v -> requestStoragePermission());
 
         send.setOnClickListener(v -> {
+            send.setEnabled(false); // Отключить кнопку, чтобы пользователь не нажал повторно
             String titles = title.getText().toString();
             String descriptions = description.getText().toString();
-            new HttpRequestTask().execute(titles, descriptions);
+            new HttpRequestTask(lottieProgress).execute(titles, descriptions); // Передаем lottieProgress
         });
+
 
         return root;
     }
@@ -126,7 +134,7 @@ public class CreateNewsFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_CODE_PICK_IMAGE) {
             selectedImageUri = data.getData();
-            ImageView imageView = binding.imageView2;
+            ImageView imageView = binding.imagePreview;
             imageView.setImageURI(selectedImageUri);
         }
     }
@@ -155,12 +163,29 @@ public class CreateNewsFragment extends Fragment {
         }
     }
 
-    private class HttpRequestTask extends AsyncTask<String, Void, String> {
+    private class HttpRequestTask extends AsyncTask<String, Integer, String> {
+
+        private LottieAnimationView lottieProgress;
+
+        public HttpRequestTask(LottieAnimationView lottieProgress) {
+            this.lottieProgress = lottieProgress;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            binding.loadingOverlay.setVisibility(View.VISIBLE); // Показываем экран загрузки
+            lottieProgress.setVisibility(View.VISIBLE);  // Показываем анимацию
+            lottieProgress.playAnimation(); // Запускаем анимацию
+            binding.send.setEnabled(false);  // Отключаем кнопку отправки
+        }
 
         @Override
         protected String doInBackground(String... params) {
             String title = params[0];
             String description = params[1];
+            long totalBytes = 0;
+            long uploadedBytes = 0;
 
             try {
                 MultipartBody.Builder builder = new MultipartBody.Builder()
@@ -172,6 +197,8 @@ public class CreateNewsFragment extends Fragment {
                     String filePath = getRealPathFromUri(selectedImageUri);
                     File file = new File(filePath);
                     builder.addFormDataPart("photo", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+
+                    totalBytes = file.length(); // Получаем общий размер файла
                 }
 
                 RequestBody requestBody = builder.build();
@@ -182,30 +209,65 @@ public class CreateNewsFragment extends Fragment {
 
                 OkHttpClient client = new OkHttpClient();
                 Response response = client.newCall(request).execute();
+
+                // Эмулируем прогресс отправки (например, на основе файла)
+                if (totalBytes > 0) {
+                    while (uploadedBytes < totalBytes) {
+                        // Имитация прогресса, замените это реальной логикой отслеживания
+                        uploadedBytes += 1024;  // Симуляция загрузки 1 КБ за раз
+
+                        // Обновляем прогресс каждые 1 КБ
+                        if (uploadedBytes % 1024 == 0) {
+                            int progress = (int) ((uploadedBytes * 100) / totalBytes);
+                            publishProgress(progress);  // Обновляем прогресс
+                        }
+
+                        Thread.sleep(100);  // Подождите немного перед следующим обновлением
+                    }
+                }
+
                 if (!response.isSuccessful()) {
                     return "Ошибка: " + response.message();
                 }
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
                 return "Ошибка: " + e.getMessage();
             }
             return null;
         }
 
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            // Получаем прогресс
+            int progress = values[0];
+
+            // Если прогресс меняется незначительно, пропускаем обновление
+            if (Math.abs(lastProgress - progress) > 1) {  // Обновляем только если прогресс изменился более чем на 1%
+                lottieProgress.setProgress(progress / 100f);  // Преобразуем процент в диапазон от 0 до 1
+                lastProgress = progress;  // Обновляем последний прогресс
+            }
+        }
+
+
         @Override
         protected void onPostExecute(String result) {
+            binding.loadingOverlay.setVisibility(View.GONE);  // Скрываем экран загрузки
+            lottieProgress.setVisibility(View.GONE);  // Скрываем анимацию после завершения отправки
+            lottieProgress.cancelAnimation();  // Останавливаем анимацию
+            binding.send.setEnabled(true);  // Включаем кнопку отправки
+
             if (result != null) {
                 Toast.makeText(getContext(), "Ошибка: " + result, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Данные успешно записаны", Toast.LENGTH_SHORT).show();
-
-                // Очистка полей
-                binding.title.setText(""); // Очистка заголовка
-                binding.description.setText(""); // Очистка описания
-                binding.imageView2.setImageResource(R.drawable.ic_menu_camera);; // Очистка изображения
-                selectedImageUri = null; // Сброс URI изображения
+                binding.title.setText("");
+                binding.description.setText("");
+                binding.imagePreview.setImageResource(R.drawable.ic_menu_camera);
+                selectedImageUri = null;
             }
         }
-
     }
+
 }
