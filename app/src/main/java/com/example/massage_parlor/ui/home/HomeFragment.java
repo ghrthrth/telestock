@@ -52,8 +52,8 @@ public class HomeFragment extends Fragment {
         String id = userData.get("id");
         String phone = userData.get("phone");
 
-        textView.setText("Привет - " + name + "," + surname + "!");
-        text_balance.setText("Ваш баланс - " + balance);
+        textView.setText("Привет - " + name + " " + surname + "!");
+        text_balance.setText("Ваш баланс - " + balance + "Br");
         text_address.setText("Ваш адрес - " + address);
         text_id.setText("Ваш Id - " + id );
         text_phone.setText("Ваш телефон - " + phone);

@@ -61,7 +61,7 @@ public class CreateServicesFragment extends Fragment {
         final TextView price = binding.textPrice;
 /*        final TextView fio = binding.textFio;*/
         final Button send = binding.send;
-        final Button selectPhoto = binding.selectPhoto;
+        final Button selectPhoto = binding.selectPhotos;
 
         selectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +114,7 @@ public class CreateServicesFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == getActivity().RESULT_OK) {
             selectedImageUri = data.getData();
-            ImageView imageView = binding.imageView2;
+            ImageView imageView = binding.imagePreview;
             imageView.setImageURI(selectedImageUri);
         }
     }
@@ -183,7 +183,7 @@ public class CreateServicesFragment extends Fragment {
                 binding.description.setText("");   // Очистка описания
                 binding.textPrice.setText("");     // Очистка цены
 
-                binding.imageView2.setImageResource(R.drawable.ic_menu_camera);
+                binding.imagePreview.setImageResource(R.drawable.ic_menu_camera);
                 selectedImageUri = null; // Сброс URI изображения
             }
         }

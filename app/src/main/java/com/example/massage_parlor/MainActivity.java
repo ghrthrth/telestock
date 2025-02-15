@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.example.massage_parlor.ui.cart.CartManager;
 import com.example.massage_parlor.ui.home.HomeFragment;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         Menu menu = navigationView.getMenu();
+        View headerView = navigationView.getHeaderView(0);
+        TextView navHeaderName = headerView.findViewById(R.id.header_name);
+        TextView navHeaderEmail = headerView.findViewById(R.id.header_balance);
 
         SharedPreferences cartsharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String previousUser = cartsharedPreferences.getString("last_user", "");
@@ -89,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
         // Получаем логин из SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String userLogin = sharedPreferences.getString("login", ""); // По умолчанию пустая строка
+        String userName = sharedPreferences.getString("name", ""); // По умолчанию пустая строка
+        String userSurname = sharedPreferences.getString("surname", ""); // По умолчанию пустая строка
+        String userBalance = sharedPreferences.getString("balance", ""); // По умолчанию пустая строка
 
         // Если логин не "admin", скрываем пункты меню
         if (!userLogin.equals("admin")) {
@@ -97,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
             menu.findItem(R.id.nav_application).setVisible(false);
         }
 
-
+        navHeaderName.setText("Привет - " + userName + " " + userSurname + "!");
+        navHeaderEmail.setText("Ваш баланс: " + userBalance + "Br");
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_create_services, R.id.nav_create_news, R.id.nav_application)
