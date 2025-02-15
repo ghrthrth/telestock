@@ -49,8 +49,6 @@ public class CreateNewsFragment extends Fragment {
 
     private Uri selectedImageUri;
 
-    private int lastProgress = -1;  // Переменная для хранения последнего прогресса
-
     private FragmentCreateNewsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -184,8 +182,6 @@ public class CreateNewsFragment extends Fragment {
         protected String doInBackground(String... params) {
             String title = params[0];
             String description = params[1];
-            long totalBytes = 0;
-            long uploadedBytes = 0;
 
             try {
                 MultipartBody.Builder builder = new MultipartBody.Builder()
@@ -198,7 +194,6 @@ public class CreateNewsFragment extends Fragment {
                     File file = new File(filePath);
                     builder.addFormDataPart("photo", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
 
-                    totalBytes = file.length(); // Получаем общий размер файла
                 }
 
                 RequestBody requestBody = builder.build();
@@ -210,44 +205,14 @@ public class CreateNewsFragment extends Fragment {
                 OkHttpClient client = new OkHttpClient();
                 Response response = client.newCall(request).execute();
 
-                // Эмулируем прогресс отправки (например, на основе файла)
-                if (totalBytes > 0) {
-                    while (uploadedBytes < totalBytes) {
-                        // Имитация прогресса, замените это реальной логикой отслеживания
-                        uploadedBytes += 1024;  // Симуляция загрузки 1 КБ за раз
-
-                        // Обновляем прогресс каждые 1 КБ
-                        if (uploadedBytes % 1024 == 0) {
-                            int progress = (int) ((uploadedBytes * 100) / totalBytes);
-                            publishProgress(progress);  // Обновляем прогресс
-                        }
-
-                        Thread.sleep(100);  // Подождите немного перед следующим обновлением
-                    }
-                }
-
                 if (!response.isSuccessful()) {
                     return "Ошибка: " + response.message();
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 return "Ошибка: " + e.getMessage();
             }
             return null;
-        }
-
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            // Получаем прогресс
-            int progress = values[0];
-
-            // Если прогресс меняется незначительно, пропускаем обновление
-            if (Math.abs(lastProgress - progress) > 1) {  // Обновляем только если прогресс изменился более чем на 1%
-                lottieProgress.setProgress(progress / 100f);  // Преобразуем процент в диапазон от 0 до 1
-                lastProgress = progress;  // Обновляем последний прогресс
-            }
         }
 
 

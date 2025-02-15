@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.massage_parlor.R;
 import com.example.massage_parlor.databinding.FragmentCreateServicesBinding;
 
@@ -63,6 +64,8 @@ public class CreateServicesFragment extends Fragment {
         final Button send = binding.send;
         final Button selectPhoto = binding.selectPhotos;
 
+        LottieAnimationView lottieProgress = binding.lottieProgress; // Инициализируем LottieAnimationView
+
         selectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,7 +101,7 @@ public class CreateServicesFragment extends Fragment {
                 String descriptions = description.getText().toString();
                 String prices = price.getText().toString();
 /*                String fios = fio.getText().toString();*/
-                new HttpRequestTask().execute(titles, descriptions, prices);
+                new HttpRequestTask(lottieProgress).execute(titles, descriptions, prices);
             }
         });
         return root;
@@ -133,6 +136,20 @@ public class CreateServicesFragment extends Fragment {
     }
 
     private class HttpRequestTask extends AsyncTask<String, Void, String> {
+        private LottieAnimationView lottieProgress;
+
+        public HttpRequestTask(LottieAnimationView lottieProgress) {
+            this.lottieProgress = lottieProgress;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            binding.loadingOverlay.setVisibility(View.VISIBLE); // Показываем экран загрузки
+            lottieProgress.setVisibility(View.VISIBLE);  // Показываем анимацию
+            lottieProgress.playAnimation(); // Запускаем анимацию
+            binding.send.setEnabled(false);  // Отключаем кнопку отправки
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -173,6 +190,11 @@ public class CreateServicesFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
+            binding.loadingOverlay.setVisibility(View.GONE);  // Скрываем экран загрузки
+            lottieProgress.setVisibility(View.GONE);  // Скрываем анимацию после завершения отправки
+            lottieProgress.cancelAnimation();  // Останавливаем анимацию
+            binding.send.setEnabled(true);  // Включаем кнопку отправки
+
             if (result != null && result.contains("Error")) {
                 Toast.makeText(getContext(), "Ошибка: " + result, Toast.LENGTH_SHORT).show();
             } else {
