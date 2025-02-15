@@ -4,121 +4,125 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.massage_parlor.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-public class ImageAdapter extends BaseAdapter implements Filterable {
+public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> implements Filterable {
 
     private Context mContext;
     private List<String> mPhotoUrls;
     private List<String> mTitles;
     private List<String> mDescriptions;
     private List<String> mPrices;
+    private List<String> mFilteredTitles;
 
-/*    private List<String> mFios;*/
-    private List<String> mFilteredTitles; // Добавьте отфильтрованные заголовки
-    private LayoutInflater mInflater;
-    private ItemFilter mItemFilter = new ItemFilter();
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public ImageAdapter(Context context, List<String> photoUrls, List<String> titles, List<String> descriptions, List<String> prices) {
-        mContext = context;
-        mPhotoUrls = photoUrls;
-        mTitles = titles;
-        mDescriptions = descriptions;
-        mPrices = prices;
-/*        mFios = fios;*/
-        mFilteredTitles = new ArrayList<>(titles); // Инициализируйте отфильтрованные заголовки
-        mInflater = LayoutInflater.from(context);
+        this.mContext = context;
+        this.mPhotoUrls = photoUrls;
+        this.mTitles = titles;
+        this.mDescriptions = descriptions;
+        this.mPrices = prices;
+        this.mFilteredTitles = new ArrayList<>(titles);
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.grid_item_layout, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public int getCount() {
-        return mFilteredTitles.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.grid_item_layout, parent, false);
-        }
-
-        // Находим представления внутри макета элемента сетки
-        ImageView imageView = convertView.findViewById(R.id.grid_image);
-        TextView titleTextView = convertView.findViewById(R.id.title_text_view);
-        TextView descriptionTextView = convertView.findViewById(R.id.description_text_view);
-        //TextView priceTextView = convertView.findViewById(R.id.price_text_view);
-        //TextView fioTextView = convertView.findViewById(R.id.fio_text_view);
-
-        // Устанавливаем данные для каждого представления
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // Получаем заголовок из отфильтрованного списка
         String title = mFilteredTitles.get(position);
-        int originalPosition = mTitles.indexOf(title); // Получаем позицию в оригинальном списке
 
+        // Получаем индекс в оригинальном списке, чтобы правильно связать данные
+        int originalPosition = mTitles.indexOf(title);
         String photoUrl = mPhotoUrls.get(originalPosition);
         String description = mDescriptions.get(originalPosition);
         String price = mPrices.get(originalPosition);
-/*        String fio = mFios.get(originalPosition);*/
 
-        // Загружаем изображение с помощью библиотеки Picasso или Glide
-        Picasso.get().load(photoUrl).into(imageView);
+        // Загружаем изображение через Picasso
+        Picasso.get().load(photoUrl).into(holder.imageView);
 
-        // Устанавливаем текст для текстовых представлений
-        titleTextView.setText(title);
-        //priceTextView.setText("Цена: " + price);
-        //fioTextView.setText("Специалист: " + fio);
+        // Устанавливаем текст для title и description
+        holder.titleTextView.setText(title);
+        //holder.descriptionTextView.setText(description);
 
-        return convertView;
+
+        // Устанавливаем обработчик клика
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(originalPosition);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return mFilteredTitles.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+        TextView titleTextView;
+        TextView descriptionTextView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.grid_image);
+            titleTextView = itemView.findViewById(R.id.title_text_view);
+            descriptionTextView = itemView.findViewById(R.id.description_text_view);
+        }
     }
 
     @Override
     public Filter getFilter() {
-        return mItemFilter;
-    }
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String filterString = constraint.toString().toLowerCase();
+                List<String> filteredList = new ArrayList<>();
 
-    private class ItemFilter extends Filter {
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            String filterString = constraint.toString().toLowerCase();
-
-            FilterResults results = new FilterResults();
-            List<String> filteredList = new ArrayList<>();
-
-            for (String title : mTitles) {
-                if (title.toLowerCase().contains(filterString)) {
-                    filteredList.add(title);
+                for (String title : mTitles) {
+                    if (title.toLowerCase().contains(filterString)) {
+                        filteredList.add(title);
+                    }
                 }
+
+                FilterResults results = new FilterResults();
+                results.values = filteredList;
+                results.count = filteredList.size();
+                return results;
             }
 
-            results.values = filteredList;
-            results.count = filteredList.size();
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            mFilteredTitles = (List<String>) results.values;
-            notifyDataSetChanged();
-        }
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                mFilteredTitles = (List<String>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

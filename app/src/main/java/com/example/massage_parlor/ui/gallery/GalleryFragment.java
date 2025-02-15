@@ -12,6 +12,8 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.massage_parlor.databinding.FragmentGalleryBinding;
 
@@ -124,11 +126,28 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
     }
     private void displayPhotosInGrid() {
         getActivity().runOnUiThread(() -> {
-            if (binding == null) return; // Проверяем, что binding существует
+            if (binding == null) return;
 
-            GridView gridView = binding.gridView;
+            RecyclerView recyclerView = binding.recyclerView;
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
             ImageAdapter adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, prices);
-            gridView.setAdapter(adapter);
+            recyclerView.setAdapter(adapter);
+
+            adapter.setOnItemClickListener(position -> {
+                String selectedId = ids.get(position);
+                String selectedTitle = titles.get(position);
+                String selectedDescription = descriptions.get(position);
+                String selectedPrice = prices.get(position);
+                String selectedImageUrl = photoUrls.get(position);
+
+                int selectedIds = Integer.parseInt(selectedId);
+                double selectedPrices = Double.parseDouble(selectedPrice);
+
+                ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedPrices, selectedImageUrl);
+                detailFragment.setOnProductDeletedListener(GalleryFragment.this);
+                detailFragment.show(getParentFragmentManager(), "product_detail");
+            });
 
             SearchView searchView = binding.searchView;
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -142,23 +161,6 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
                     adapter.getFilter().filter(newText);
                     return true;
                 }
-            });
-
-            gridView.setOnItemClickListener((parent, view, position, id) -> {
-                if (binding == null) return; // Дополнительная проверка перед работой с элементами UI
-
-                String selectedId = ids.get(position);
-                String selectedTitle = titles.get(position);
-                String selectedDescription = descriptions.get(position);
-                String selectedPrice = prices.get(position);
-                String selectedImageUrl = photoUrls.get(position);
-
-                int selectedIds = Integer.parseInt(selectedId);
-                double selectedPrices = Double.parseDouble(selectedPrice);
-
-                ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedPrices, selectedImageUrl);
-                detailFragment.setOnProductDeletedListener(GalleryFragment.this);
-                detailFragment.show(getParentFragmentManager(), "product_detail");
             });
         });
     }
