@@ -1,6 +1,4 @@
-package com.example.massage_parlor;
-
-import static com.example.massage_parlor.RegistrationOrLogin.getUserData;
+package com.example.telestock;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -8,14 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
 
-import com.example.massage_parlor.ui.cart.CartManager;
-import com.example.massage_parlor.ui.home.HomeFragment;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.telestock.ui.cart.CartManager;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -25,10 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.massage_parlor.databinding.ActivityMainBinding;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.example.telestock.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;

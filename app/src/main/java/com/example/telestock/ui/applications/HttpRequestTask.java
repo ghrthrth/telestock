@@ -1,4 +1,4 @@
-package com.example.massage_parlor.ui.applications;
+package com.example.telestock.ui.applications;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

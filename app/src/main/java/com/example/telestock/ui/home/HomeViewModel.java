@@ -1,4 +1,4 @@
-package com.example.massage_parlor.ui.home;
+package com.example.telestock.ui.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

@@ -1,7 +1,6 @@
-package com.example.massage_parlor.ui.create_news;
+package com.example.telestock.ui.create_news;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +23,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.massage_parlor.ProgressRequestBody;
-import com.example.massage_parlor.R;
-import com.example.massage_parlor.databinding.FragmentCreateNewsBinding;
+import com.example.telestock.R;
+import com.example.telestock.databinding.FragmentCreateNewsBinding;
 
 import java.io.File;
 import java.io.IOException;
@@ -198,7 +195,7 @@ public class CreateNewsFragment extends Fragment {
 
                 RequestBody requestBody = builder.build();
                 Request request = new Request.Builder()
-                        .url("https://claimbes.store/massage_parlor/api/add.php")
+                        .url("https://claimbes.store/telestock/api/add.php")
                         .post(requestBody)
                         .build();
 

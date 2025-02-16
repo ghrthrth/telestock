@@ -1,9 +1,8 @@
-package com.example.massage_parlor;
+package com.example.telestock;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,7 +52,7 @@ public class LoginActivity  extends AppCompatActivity {
 
                 RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
                 Request request = new Request.Builder()
-                        .url("https://claimbes.store/massage_parlor/api/authentication.php") // Замените на URL вашего сервера
+                        .url("https://claimbes.store/telestock/api/authentication.php") // Замените на URL вашего сервера
                         .post(requestBody)
                         .build();
                 client.newCall(request).enqueue(new Callback() {

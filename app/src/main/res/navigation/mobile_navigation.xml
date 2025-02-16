@@ -7,39 +7,39 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.massage_parlor.ui.home.HomeFragment"
+        android:name="com.example.telestock.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.massage_parlor.ui.gallery.GalleryFragment"
+        android:name="com.example.telestock.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="com.example.massage_parlor.ui.slideshow.SlideshowFragment"
+        android:name="com.example.telestock.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
     <fragment
         android:id="@+id/nav_create_services"
-        android:name="com.example.massage_parlor.ui.create_services.CreateServicesFragment"
+        android:name="com.example.telestock.ui.create_services.CreateServicesFragment"
         android:label="@string/menu_create_services"
         tools:layout="@layout/fragment_create_services" />
     <fragment
         android:id="@+id/nav_create_news"
-        android:name="com.example.massage_parlor.ui.create_news.CreateNewsFragment"
+        android:name="com.example.telestock.ui.create_news.CreateNewsFragment"
         android:label="@string/menu_create_news"
         tools:layout="@layout/fragment_create_news" />
     <fragment
         android:id="@+id/nav_application"
-        android:name="com.example.massage_parlor.ui.applications.ApplicationsFragment"
+        android:name="com.example.telestock.ui.applications.ApplicationsFragment"
         android:label="@string/menu_applications"
         tools:layout="@layout/fragment_applications" />
     <fragment
         android:id="@+id/nav_cart"
-        android:name="com.example.massage_parlor.ui.cart.CartFragment"
+        android:name="com.example.telestock.ui.cart.CartFragment"
         android:label="@string/menu_cart"
         tools:layout="@layout/fragment_cart" />
 </navigation>

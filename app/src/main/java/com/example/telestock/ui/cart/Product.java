@@ -1,4 +1,4 @@
-package com.example.massage_parlor.ui.cart;
+package com.example.telestock.ui.cart;
 
 public class Product {
     private int id;

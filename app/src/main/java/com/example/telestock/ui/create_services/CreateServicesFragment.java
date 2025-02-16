@@ -1,4 +1,4 @@
-package com.example.massage_parlor.ui.create_services;
+package com.example.telestock.ui.create_services;
 
 import android.Manifest;
 import android.content.Intent;
@@ -24,8 +24,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.massage_parlor.R;
-import com.example.massage_parlor.databinding.FragmentCreateServicesBinding;
+import com.example.telestock.R;
+import com.example.telestock.databinding.FragmentCreateServicesBinding;
 
 import java.io.File;
 import java.io.IOException;
@@ -175,7 +175,7 @@ public class CreateServicesFragment extends Fragment {
 
                 RequestBody requestBody = builder.build();
                 Request request = new Request.Builder()
-                        .url("https://claimbes.store/massage_parlor/admin_api/add.php")
+                        .url("https://claimbes.store/telestock/admin_api/add.php")
                         .post(requestBody)
                         .build();
 

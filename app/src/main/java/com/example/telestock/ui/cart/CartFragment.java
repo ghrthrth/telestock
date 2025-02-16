@@ -1,4 +1,4 @@
-package com.example.massage_parlor.ui.cart;
+package com.example.telestock.ui.cart;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.massage_parlor.databinding.FragmentCartBinding;
+import com.example.telestock.databinding.FragmentCartBinding;
 import java.util.List;
 
 import okhttp3.OkHttpClient;

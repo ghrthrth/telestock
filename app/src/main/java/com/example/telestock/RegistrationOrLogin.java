@@ -1,4 +1,4 @@
-package com.example.massage_parlor;
+package com.example.telestock;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,10 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -115,7 +112,7 @@ public class RegistrationOrLogin extends AppCompatActivity {
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         Request request = new Request.Builder()
-                .url("https://claimbes.store/massage_parlor/api/update.php") // Замените на URL вашего сервера
+                .url("https://claimbes.store/telestock/api/update.php") // Замените на URL вашего сервера
                 .post(requestBody)
                 .build();
         client.newCall(request).enqueue(new Callback() {

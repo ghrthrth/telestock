@@ -1,4 +1,4 @@
-package com.example.massage_parlor.ui.applications;
+package com.example.telestock.ui.applications;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.example.massage_parlor.R;
+import com.example.telestock.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.jetbrains.annotations.Nullable;
@@ -98,7 +98,7 @@ public class ApplicationDetailFragment extends BottomSheetDialogFragment {
         send_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new HttpRequestTask(mContext, "https://claimbes.store/massage_parlor/api/add_application/delete.php", params).execute();
+                new HttpRequestTask(mContext, "https://claimbes.store/telestock/api/add_application/delete.php", params).execute();
                 dismiss();
                 adapter.removeItem(position);
             }

@@ -1,4 +1,4 @@
-package com.example.massage_parlor;
+package com.example.telestock;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.massage_parlor", appContext.getPackageName());
+        assertEquals("com.example.telestock", appContext.getPackageName());
     }
 }

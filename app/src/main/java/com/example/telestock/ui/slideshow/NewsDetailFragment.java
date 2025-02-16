@@ -1,4 +1,4 @@
-package com.example.massage_parlor.ui.slideshow;
+package com.example.telestock.ui.slideshow;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.massage_parlor.R;
+import com.example.telestock.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.squareup.picasso.Picasso;
 
@@ -105,7 +105,7 @@ public class NewsDetailFragment extends BottomSheetDialogFragment {
 
                 // Создаем запрос
                 Request request = new Request.Builder()
-                        .url("https://claimbes.store/massage_parlor/api/delete_news.php")
+                        .url("https://claimbes.store/telestock/api/delete_news.php")
                         .post(requestBody) // Указываем метод POST
                         .build();
 

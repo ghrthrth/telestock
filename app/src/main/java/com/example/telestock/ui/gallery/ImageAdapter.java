@@ -1,4 +1,4 @@
-package com.example.massage_parlor.ui.gallery;
+package com.example.telestock.ui.gallery;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.massage_parlor.R;
+import com.example.telestock.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

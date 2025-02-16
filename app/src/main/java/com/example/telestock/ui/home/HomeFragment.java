@@ -1,12 +1,9 @@
-package com.example.massage_parlor.ui.home;
+package com.example.telestock.ui.home;
 
-import static com.example.massage_parlor.RegistrationOrLogin.getUserData;
+import static com.example.telestock.RegistrationOrLogin.getUserData;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.massage_parlor.MainActivity;
-import com.example.massage_parlor.RegistrationOrLogin;
-import com.example.massage_parlor.databinding.FragmentHomeBinding;
+import com.example.telestock.databinding.FragmentHomeBinding;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class HomeFragment extends Fragment {

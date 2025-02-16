@@ -1,22 +1,17 @@
-package com.example.massage_parlor.ui.slideshow;
+package com.example.telestock.ui.slideshow;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.massage_parlor.databinding.FragmentSlideshowBinding;
-import com.example.massage_parlor.ui.gallery.GalleryFragment;
-import com.example.massage_parlor.ui.gallery.ImageAdapter;
-import com.example.massage_parlor.ui.gallery.ProductDetailFragment;
+import com.example.telestock.databinding.FragmentSlideshowBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,7 +61,7 @@ public class SlideshowFragment extends Fragment implements NewsDetailFragment.On
     }
 
     private void getPhotoUrlsFromServer() {
-        String url = "https://claimbes.store/massage_parlor/api/return_news.php"; // Замените на ваш URL-адрес сервера
+        String url = "https://claimbes.store/telestock/api/return_news.php"; // Замените на ваш URL-адрес сервера
 
         OkHttpClient client = new OkHttpClient();
 

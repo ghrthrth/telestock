@@ -1,7 +1,7 @@
-package com.example.massage_parlor.ui.cart;
+package com.example.telestock.ui.cart;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.example.massage_parlor.RegistrationOrLogin.getUserData;
+import static com.example.telestock.RegistrationOrLogin.getUserData;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,8 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;  // Библиотека для загрузки картинок
-import com.example.massage_parlor.R;
-import com.example.massage_parlor.ui.applications.HttpRequestTask;
+import com.example.telestock.R;
+import com.example.telestock.ui.applications.HttpRequestTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -87,7 +87,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             params.put("times", formattedTime);
 
             // Отправка данных на сервер
-            new HttpRequestTask(context, "https://claimbes.store/massage_parlor/api/add_application/add.php", params).execute();
+            new HttpRequestTask(context, "https://claimbes.store/telestock/api/add_application/add.php", params).execute();
 
             cartManager.removeFromCart(product.getId());
             cartItems.clear();

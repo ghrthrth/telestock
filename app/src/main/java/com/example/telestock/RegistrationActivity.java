@@ -1,9 +1,8 @@
-package com.example.massage_parlor;
+package com.example.telestock;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,7 +17,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -94,7 +92,7 @@ public class RegistrationActivity extends AppCompatActivity {
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             RequestBody requestBody = RequestBody.create(JSON, json.toString());
             Request request = new Request.Builder()
-                    .url("https://claimbes.store/massage_parlor/api/registration.php")
+                    .url("https://claimbes.store/telestock/api/registration.php")
                     .post(requestBody)
                     .build();
 

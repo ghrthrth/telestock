@@ -1,11 +1,9 @@
-package com.example.massage_parlor.ui.gallery;
+package com.example.telestock.ui.gallery;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.SearchView;
 
 
@@ -15,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.massage_parlor.databinding.FragmentGalleryBinding;
+import com.example.telestock.databinding.FragmentGalleryBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,7 +63,7 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
         }
     }
     private void getPhotoUrlsFromServer() {
-        String url = "https://claimbes.store/massage_parlor/admin_api/return.php"; // Замените на ваш URL-адрес сервера
+        String url = "https://claimbes.store/telestock/admin_api/return.php"; // Замените на ваш URL-адрес сервера
 
         OkHttpClient client = new OkHttpClient();
 

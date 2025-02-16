@@ -15,5 +15,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "massage_parlor"
+rootProject.name = "telestock"
 include(":app")

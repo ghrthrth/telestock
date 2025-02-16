@@ -1,6 +1,4 @@
-package com.example.massage_parlor.ui.gallery;
-
-import static android.content.Context.MODE_PRIVATE;
+package com.example.telestock.ui.gallery;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,18 +15,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.massage_parlor.R;
-import com.example.massage_parlor.ui.cart.Product;
-import com.example.massage_parlor.ui.create_news.CreateNewsFragment;
+import com.example.telestock.R;
+import com.example.telestock.ui.cart.Product;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.example.massage_parlor.ui.cart.CartManager;
+import com.example.telestock.ui.cart.CartManager;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.io.IOException;
 
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -125,7 +120,7 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
 
                 // Создаем запрос
                 Request request = new Request.Builder()
-                        .url("https://claimbes.store/massage_parlor/admin_api/delete.php")
+                        .url("https://claimbes.store/telestock/admin_api/delete.php")
                         .post(requestBody) // Указываем метод POST
                         .build();
 

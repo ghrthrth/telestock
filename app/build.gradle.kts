@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.massage_parlor"
+    namespace = "com.example.telestock"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.massage_parlor"
+        applicationId = "com.example.telestock"
         minSdk = 24
         targetSdk = 33
         versionCode = 1

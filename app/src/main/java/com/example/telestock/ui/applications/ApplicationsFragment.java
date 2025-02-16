@@ -1,35 +1,26 @@
-package com.example.massage_parlor.ui.applications;
+package com.example.telestock.ui.applications;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.massage_parlor.R;
-import com.example.massage_parlor.databinding.FragmentApplicationsBinding;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.example.telestock.databinding.FragmentApplicationsBinding;
 
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -70,7 +61,7 @@ public class ApplicationsFragment extends Fragment {
 
         if (!isAdded()) return; // Проверяем, не был ли фрагмент уничтожен
 
-        String url = "https://claimbes.store/massage_parlor/api/add_application/return.php"; // Замените на ваш URL-адрес сервера
+        String url = "https://claimbes.store/telestock/api/add_application/return.php"; // Замените на ваш URL-адрес сервера
 
         OkHttpClient client = new OkHttpClient();
 

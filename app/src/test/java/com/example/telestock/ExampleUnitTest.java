@@ -1,4 +1,4 @@
-package com.example.massage_parlor;
+package com.example.telestock;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.massage_parlor.ui.create_news;
+package com.example.telestock.ui.create_news;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

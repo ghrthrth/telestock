@@ -1,4 +1,4 @@
-package com.example.massage_parlor;
+package com.example.telestock;
 
 import android.content.Intent;
 import android.os.Bundle;

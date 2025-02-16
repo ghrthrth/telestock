@@ -1,4 +1,4 @@
-package com.example.massage_parlor.ui.applications;
+package com.example.telestock.ui.applications;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.example.massage_parlor.R;
+import com.example.telestock.R;
 
 import java.util.ArrayList;
 import java.util.List;
