@@ -73,7 +73,7 @@ public class RegistrationActivity extends AppCompatActivity {
             String address = params[2];
             String login = params[3];
             String password = params[4];
-            String phone = params[4];
+            String phone = params[5];
 
             JSONObject json = new JSONObject();
 
