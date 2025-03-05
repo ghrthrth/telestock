@@ -11,4 +11,7 @@
         <item name="boxCornerRadiusBottomStart">12dp</item>
         <item name="boxCornerRadiusBottomEnd">12dp</item>
     </style>
+    <style name="RoundedSpinner">
+        <item name="android:background">@drawable/spinner_background</item>
+    </style>
 </resources>

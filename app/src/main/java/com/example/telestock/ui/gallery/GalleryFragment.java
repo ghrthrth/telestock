@@ -1,11 +1,11 @@
 package com.example.telestock.ui.gallery;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.telestock.databinding.FragmentGalleryBinding;
+import com.example.telestock.ui.filter.FilterFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,16 +30,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class GalleryFragment extends Fragment implements ProductDetailFragment.OnProductDeletedListener{
+public class GalleryFragment extends Fragment implements ProductDetailFragment.OnProductDeletedListener, FilterFragment.FilterFragmentListener {
 
     private FragmentGalleryBinding binding;
     private List<String> ids = new ArrayList<>();
     private List<String> photoUrls = new ArrayList<>();
     private List<String> titles = new ArrayList<>();
     private List<String> descriptions = new ArrayList<>();
+    private List<String> categorys = new ArrayList<>();
     private List<String> prices = new ArrayList<>();
 
     private OkHttpClient client = new OkHttpClient();
+    private ImageAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -49,6 +52,15 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
         View root = binding.getRoot();
 
         getPhotoUrlsFromServer();  // Получаем данные с сервера
+
+        // Кнопка для открытия фильтра
+        binding.filterButton.setOnClickListener(v -> {
+            FilterFragment filterFragment = new FilterFragment();
+            filterFragment.setFilterFragmentListener(this);
+            filterFragment.setCategories(categorys); // Передаем список категорий
+            filterFragment.show(getParentFragmentManager(), "filter_fragment");
+        });
+
         return root;
     }
 
@@ -62,10 +74,9 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
             }
         }
     }
+
     private void getPhotoUrlsFromServer() {
         String url = "https://claimbes.store/telestock/admin_api/return.php"; // Замените на ваш URL-адрес сервера
-
-        OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
                 .url(url)
@@ -89,13 +100,28 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
                         JSONArray photoUrlsArray = jsonObject.getJSONArray("photoUrls");
                         JSONArray titleArray = jsonObject.getJSONArray("title");
                         JSONArray descriptionArray = jsonObject.getJSONArray("description");
+                        JSONArray categoryArray = jsonObject.getJSONArray("category");
                         JSONArray priceArray = jsonObject.getJSONArray("price");
 
+                        // Логируем данные для отладки
+                        Log.d("ServerData", "Categories: " + categoryArray.toString());
+                        Log.d("ServerData", "Prices: " + priceArray.toString());
+
+                        // Очищаем списки перед добавлением новых данных
+                        ids.clear();
+                        photoUrls.clear();
+                        titles.clear();
+                        descriptions.clear();
+                        categorys.clear();
+                        prices.clear();
+
+                        // Добавляем данные в списки
                         addItemsToList(idArray, ids);
                         addItemsToList(photoUrlsArray, photoUrls);
                         addItemsToList(titleArray, titles);
                         addItemsToList(descriptionArray, descriptions);
-                        addItemsToList(priceArray, prices);
+                        addItemsToList(categoryArray, categorys); // Категории
+                        addItemsToList(priceArray, prices); // Цены
 
                         if (isAdded()) { // Еще раз проверяем перед вызовом UI
                             displayPhotosInGrid();
@@ -107,6 +133,8 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
             }
         });
     }
+
+
     @Override
     public void onProductDeleted(int productId) {
         // Удаляем товар из списка по ID
@@ -116,33 +144,45 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
             photoUrls.remove(index);
             titles.remove(index);
             descriptions.remove(index);
+            categorys.remove(index);
             prices.remove(index);
         }
 
         // Обновляем адаптер
         displayPhotosInGrid();
     }
+
     private void displayPhotosInGrid() {
+        if (!isAdded() || isDetached()) {
+            return; // Проверка, что фрагмент все еще прикреплен к активности
+        }
+
         getActivity().runOnUiThread(() -> {
             if (binding == null) return;
 
             RecyclerView recyclerView = binding.recyclerView;
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-            ImageAdapter adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, prices);
+            adapter = new ImageAdapter(getContext(), photoUrls, titles, descriptions, categorys, prices);
             recyclerView.setAdapter(adapter);
 
             adapter.setOnItemClickListener(position -> {
+                if (position < 0 || position >= ids.size()) {
+                    return; // Проверка на выход за пределы списка
+                }
+
                 String selectedId = ids.get(position);
                 String selectedTitle = titles.get(position);
                 String selectedDescription = descriptions.get(position);
+                String selectedCategory = categorys.get(position);
                 String selectedPrice = prices.get(position);
                 String selectedImageUrl = photoUrls.get(position);
+
 
                 int selectedIds = Integer.parseInt(selectedId);
                 double selectedPrices = Double.parseDouble(selectedPrice);
 
-                ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedPrices, selectedImageUrl);
+                ProductDetailFragment detailFragment = new ProductDetailFragment(getContext(), selectedIds, selectedTitle, selectedDescription, selectedCategory, selectedPrices, selectedImageUrl);
                 detailFragment.setOnProductDeletedListener(GalleryFragment.this);
                 detailFragment.show(getParentFragmentManager(), "product_detail");
             });
@@ -161,6 +201,14 @@ public class GalleryFragment extends Fragment implements ProductDetailFragment.O
                 }
             });
         });
+    }
+
+    @Override
+    public void onFilterApplied(double minPrice, double maxPrice, String category) {
+        // Применяем фильтр к адаптеру
+        if (adapter != null) {
+            adapter.filterByPriceAndCategory(minPrice, maxPrice, category);
+        }
     }
 
     @Override

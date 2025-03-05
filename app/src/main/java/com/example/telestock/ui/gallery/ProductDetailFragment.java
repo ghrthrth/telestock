@@ -31,7 +31,7 @@ import okhttp3.Response;
 
 public class ProductDetailFragment extends BottomSheetDialogFragment {
     private int id;
-    private String title, description, imageUrl;
+    private String title, description, category, imageUrl;
     private double price;
     private Context mContext;
     public CartManager cartManager;
@@ -39,10 +39,11 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
     private OnProductDeletedListener onProductDeletedListener;
 
 
-    public ProductDetailFragment(Context context, int id, String title, String description, double price, String imageUrl) {
+    public ProductDetailFragment(Context context, int id, String title, String description, String category, double price, String imageUrl) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.category = category;
         this.price = price;
         /*        this.fio = fio;*/
         this.imageUrl = imageUrl;  // Добавляем изображение
@@ -64,6 +65,7 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
         TextView titleTextView = view.findViewById(R.id.title);
         TextView descriptionTextView = view.findViewById(R.id.description);
         TextView priceTextView = view.findViewById(R.id.price);
+        TextView categoryTextView = view.findViewById(R.id.category);
         Button addToCartButton = view.findViewById(R.id.button_appointment);
         Button deleteButton = view.findViewById(R.id.button_delete);
 
@@ -75,6 +77,7 @@ public class ProductDetailFragment extends BottomSheetDialogFragment {
         Picasso.get().load(imageUrl).into(imageView);
         titleTextView.setText("Название товара: " + title);
         descriptionTextView.setText("Описание товара: " + description);
+        categoryTextView.setText("Категория товара " + category);
         priceTextView.setText("Цена товара: " + price);
 
         cartManager = CartManager.getInstance(mContext);

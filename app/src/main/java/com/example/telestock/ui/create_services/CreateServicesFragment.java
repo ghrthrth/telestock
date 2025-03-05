@@ -60,6 +60,7 @@ public class CreateServicesFragment extends Fragment {
         final TextView title = binding.title;
         final TextView description = binding.description;
         final TextView price = binding.textPrice;
+        final TextView category = binding.category;
 /*        final TextView fio = binding.textFio;*/
         final Button send = binding.send;
         final Button selectPhoto = binding.selectPhotos;
@@ -99,9 +100,10 @@ public class CreateServicesFragment extends Fragment {
             public void onClick(View v) {
                 String titles = title.getText().toString();
                 String descriptions = description.getText().toString();
+                String categorys = category.getText().toString();
                 String prices = price.getText().toString();
 /*                String fios = fio.getText().toString();*/
-                new HttpRequestTask(lottieProgress).execute(titles, descriptions, prices);
+                new HttpRequestTask(lottieProgress).execute(titles, descriptions, categorys, prices);
             }
         });
         return root;
@@ -155,7 +157,8 @@ public class CreateServicesFragment extends Fragment {
         protected String doInBackground(String... params) {
             String title = params[0];
             String description = params[1];
-            String price = params[2]; // Получаем категорию
+            String category = params[2];
+            String price = params[3]; // Получаем категорию
 /*            String fio = params[3];*/
 
             try {
@@ -163,6 +166,7 @@ public class CreateServicesFragment extends Fragment {
                         .setType(MultipartBody.FORM)
                         .addFormDataPart("title", title)
                         .addFormDataPart("description", description)
+                        .addFormDataPart("category", category)
                         .addFormDataPart("price", price);
 /*                        .addFormDataPart("fio", fio);*/
 
@@ -203,6 +207,7 @@ public class CreateServicesFragment extends Fragment {
                 // Очистка полей
                 binding.title.setText("");         // Очистка заголовка
                 binding.description.setText("");   // Очистка описания
+                binding.category.setText("");
                 binding.textPrice.setText("");     // Очистка цены
 
                 binding.imagePreview.setImageResource(R.drawable.ic_menu_camera);
